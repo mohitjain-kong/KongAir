@@ -44,18 +44,18 @@ plugins:
   tags:
   - platform-repo-managed
 services:
-- host: flights.kongair
-  id: 0cef4d36-9c39-5ac2-9d9f-190d8ea8a252
-  name: flights-service
+- host: api.kong-air.com
+  id: e998daf1-0b1c-5c04-891b-4952b383251b
+  name: flights-service-ensono-demo
   path: /
   plugins: []
-  port: 8080
-  protocol: http
+  port: 443
+  protocol: https
   routes:
-  - id: 7b2dbd94-ec5b-5ae8-b6d5-4c8b16ce0b06
+  - id: 6069e690-4ce3-5114-b217-9f1e99f9a274
     methods:
     - GET
-    name: flights-service_get-flights
+    name: flights-service-ensono-demo_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -66,10 +66,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 3210c3ed-9976-500d-ac03-07eaac972ad0
+  - id: 2d0a772a-6984-550b-b05e-df8338ab252e
     methods:
     - GET
-    name: flights-service_get-flight-by-number
+    name: flights-service-ensono-demo_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -80,10 +80,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 08020aa2-6106-59ec-903a-3459e7cbb629
+  - id: a4951738-964f-56a2-bc09-a41e2575307c
     methods:
     - GET
-    name: flights-service_get-flight-details
+    name: flights-service-ensono-demo_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -94,10 +94,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: a5023323-0468-5a77-baf2-13578fec61b0
+  - id: 139ecc19-02dd-5ba2-8ab2-2796ed7d61fc
     methods:
     - GET
-    name: flights-service_health_get
+    name: flights-service-ensono-demo_health_get
     paths:
     - ~/health$
     plugins: []
