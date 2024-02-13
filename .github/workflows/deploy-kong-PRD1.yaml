@@ -38,5 +38,5 @@ jobs:
         run: |
           deck sync --select-tag platform-repo-managed \
               -s PRD/kong/kong.yaml \
-              --konnect-runtime-group-name KongAir-PRD \
+              --konnect-control-plane-name education \
               --konnect-token ${{ secrets.KONNECT_PAT }}
