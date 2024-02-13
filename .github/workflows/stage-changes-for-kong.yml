@@ -1,0 +1,157 @@
+name: Stage changes for Kong
+
+on:
+  push:
+    branches:
+      - main
+      - workflow/**
+    paths-ignore:
+      - 'PRD/**'
+      - 'platform/kong/.generated/kong.yaml'
+
+jobs:
+
+#  this job is useful to debug workflows, see https://github.com/mheap/debug-artifact
+#  debug-artifacts:
+#    name: Upload Debug Artifacts
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Upload Debug Artifacts
+#        uses: mheap/debug-artifact@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  has-changes:
+    name: Have specs, configurations, or pipeline files changed
+    runs-on: ubuntu-latest
+
+    outputs:
+      are-changes: ${{ steps.changed-files.outputs.files }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: dorny/paths-filter@v2
+        id: changed-files
+        with:
+          filters: |
+            files:
+              - '.github/workflows/stage-changes-for-kong.yaml'
+              - 'flight-data/flights/openapi.yaml'
+              - 'flight-data/flights/kong/**'
+              - 'flight-data/routes/openapi.yaml'
+              - 'flight-data/routes/kong/**'
+              - 'sales/bookings/opeanapi.yaml'
+              - 'sales/bookings/kong/**'
+              - 'sales/customer/opeanapi.yaml'
+              - 'sales/customer/kong/**'
+              - 'experience/kong/**'
+              - 'platform/kong/**'
+
+  oas-to-kong:
+    name: Convert OAS to Kong configurations
+
+    needs: has-changes
+    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup deck
+        uses: kong/setup-deck@v1
+        with:
+          deck-version: '1.26.0'
+          wrapper: false
+
+      - name: Convert Flights API to Kong
+        # In multiple steps, convert the OpenAPI Spec to a Kong declarative configuration
+        #   and then patch the result with the data in the kong/patches.yaml
+        #   and apply some tags
+        run: |
+          deck file openapi2kong -s flight-data/flights/openapi.yaml | \
+            deck file patch flight-data/flights/kong/patches.yaml | \
+            deck file add-tags -o .github/artifacts/kong/flight-data-flights-kong.yaml \
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data
+
+
+      - name: Convert Routes API to Kong
+        # In two steps, convert the OpenAPI Spec to a Kong declarative configuration
+        #   and then patch the result with the data in the kong/patches.yaml
+        run: |
+          deck file openapi2kong -s flight-data/routes/openapi.yaml | \
+            deck file patch flight-data/routes/kong/patches.yaml | \
+            deck file add-tags -o .github/artifacts/kong/flight-data-routes-kong.yaml \
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data
+
+      - name: Convert Bookings API to Kong
+        # In two steps, convert the OpenAPI Spec to a Kong declarative configuration
+        #   and then patch the result with the data in the kong/patches.yaml
+        run: |
+          deck file openapi2kong -s sales/bookings/openapi.yaml | \
+            deck file patch  sales/bookings/kong/patches.yaml | \
+            deck file add-tags -o .github/artifacts/kong/sales-bookings-kong.yaml \
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
+
+      - name: Convert Customers API to Kong
+        # In two steps, convert the OpenAPI Spec to a Kong declarative configuration
+        #   and then patch the result with the data in the kong/patches.yaml
+        run: |
+          deck file openapi2kong -s sales/customer/openapi.yaml | \
+            deck file patch sales/customer/kong/patches.yaml | \
+            deck file add-tags -o .github/artifacts/kong/sales-customer-kong.yaml --selector "$.services[*]" \
+              --selector "$.services[*].routes[*]" sales
+
+      - name: Combine Kong Configurations
+        # Combine all the previous OAS->Kong configurations into one and put it in a well known place
+        run: |
+          deck file merge \
+            .github/artifacts/kong/*-kong.yaml -o .github/artifacts/kong/kong-combined.yaml
+
+      - name: Merge Experience API Configurations
+        run: |
+          deck file merge \
+            .github/artifacts/kong/kong-combined.yaml experience/kong/experience-service.yaml \
+            -o .github/artifacts/kong/kong-combined.yaml
+
+      - name: Platform Team Kong Additions
+        # The platform team has their own things to add to the final Kong configuration.
+        # The platform-kong-base.yaml is a base file for any platform defaults. It will "win" over
+        #   any settings in the domain teams Kong configurations.
+        # Then the platform adds in some objects like plugins, consumers, vaults, etc..
+        # Also the platform/kong/patches.yaml is used to patch anything from the upstream
+        #   team configurations
+        # And finally a tag is added to everything managed in this process to allow
+        #   the deck tool to isolate what is managed here from entities that may be managed
+        #   elsewhere or by other tools
+        # The platform/kong/.generated/kong.yaml is the final product and is stored in the repository.
+        #   Storing the generated file in the repo is intentional,
+        #   it should help with PR reviews, transparency, and debugging.
+        run: |
+          deck file merge \
+            .github/artifacts/kong/kong-combined.yaml \
+            platform/kong/platform-kong-base.yaml     \
+            platform/kong/consumers/*                 \
+            platform/kong/plugins/*                   \
+            platform/kong/vaults/* |                  \
+          deck file patch \
+            platform/kong/patches.yaml |
+          deck file add-tags \
+            -o platform/kong/.generated/kong.yaml \
+            "platform-repo-managed"
+
+      - name: Upload Artifacts
+        # Artifacts are the files that are built along the way of the pipeline but are not committed to the repo
+        uses: actions/upload-artifact@v3
+        with:
+          name: kong-configurations
+          path: .github/artifacts/kong/*.yaml
+
+      - name: Create PR for changed Kong Gateway Configuration
+        # The only file that should be changed for this PR is platform/kong/.generated/kong.yaml
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Stage Kong Gateway Configuration
