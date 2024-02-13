@@ -45,17 +45,17 @@ plugins:
   - platform-repo-managed
 services:
 - host: api.kong-air.com
-  id: e998daf1-0b1c-5c04-891b-4952b383251b
-  name: flights-service-ensono-demo
+  id: a722eaea-35c3-5541-a995-10a042bd87b8
+  name: flights-service-ensono-payuk
   path: /
   plugins: []
   port: 443
   protocol: https
   routes:
-  - id: 6069e690-4ce3-5114-b217-9f1e99f9a274
+  - id: 2b4484aa-227b-5da3-bc4f-60aa7bc90dea
     methods:
     - GET
-    name: flights-service-ensono-demo_get-flights
+    name: flights-service-ensono-payuk_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -66,10 +66,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 2d0a772a-6984-550b-b05e-df8338ab252e
+  - id: 1f49f4ef-08c3-59a6-b974-75a808416bfa
     methods:
     - GET
-    name: flights-service-ensono-demo_get-flight-by-number
+    name: flights-service-ensono-payuk_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -80,10 +80,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: a4951738-964f-56a2-bc09-a41e2575307c
+  - id: 784e9600-ad41-5972-b0eb-a3bc60e0e60c
     methods:
     - GET
-    name: flights-service-ensono-demo_get-flight-details
+    name: flights-service-ensono-payuk_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -94,10 +94,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 139ecc19-02dd-5ba2-8ab2-2796ed7d61fc
+  - id: 71efd6d7-cffd-5c93-9f10-904b4f32fa5f
     methods:
     - GET
-    name: flights-service-ensono-demo_health_get
+    name: flights-service-ensono-payuk_health_get
     paths:
     - ~/health$
     plugins: []
@@ -111,18 +111,18 @@ services:
   tags:
   - flight-data
   - platform-repo-managed
-- host: routes.kongair
-  id: 5bbc0ad8-3b7c-5dfe-a676-b28f30523a6f
-  name: routes-service
+- host: api.kong-air.com
+  id: c0c30861-130a-569b-8207-ea38b4f268b1
+  name: routes-service-ensono-payuk
   path: /
   plugins: []
-  port: 8081
-  protocol: http
+  port: 443
+  protocol: https
   routes:
-  - id: 4da7a5e5-9e69-59af-a6c3-46a675c5bac6
+  - id: 58c363b0-46c3-58a4-91f5-494d60211f68
     methods:
     - GET
-    name: routes-service_health_get
+    name: routes-service-ensono-payuk_health_get
     paths:
     - ~/health$
     plugins: []
@@ -131,12 +131,12 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flights-data
     - platform-repo-managed
-  - id: 89f28ad3-74db-5149-8fa5-f7fffbfda79c
+  - id: e08c6382-2a43-54a3-8040-29f8d3379bc4
     methods:
     - GET
-    name: routes-service_get-routes
+    name: routes-service-ensono-payuk_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -145,12 +145,12 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flights-data
     - platform-repo-managed
-  - id: 831bf89a-08be-5dbd-bcd2-aa2348d784d3
+  - id: 009ce651-42b0-57ca-b5f0-7a81c97ba42f
     methods:
     - GET
-    name: routes-service_get-route
+    name: routes-service-ensono-payuk_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -159,10 +159,10 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flights-data
     - platform-repo-managed
   tags:
-  - flight-data
+  - flights-data
   - platform-repo-managed
 - host: bookings.kongair
   id: 22e1521b-9b91-5d2f-917b-4463066f1aed
