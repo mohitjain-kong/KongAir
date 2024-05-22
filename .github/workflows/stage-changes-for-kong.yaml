@@ -75,7 +75,7 @@ jobs:
           deck file openapi2kong -s flight-data/flights/openapi.yaml | \
             deck file patch flight-data/flights/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-flights-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" flights-data-payuk
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" flights-data-payuk1
 
 
       - name: Convert Routes API to Kong
@@ -85,7 +85,7 @@ jobs:
           deck file openapi2kong -s flight-data/routes/openapi.yaml | \
             deck file patch flight-data/routes/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-routes-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" routes-data-payuk
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" routes-data-payuk1
 
       - name: Convert Bookings API to Kong
         # In two steps, convert the OpenAPI Spec to a Kong declarative configuration
