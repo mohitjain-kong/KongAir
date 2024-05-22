@@ -64,7 +64,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flights-data-cbs
+    - flights-data-payuk1
     - platform-repo-managed
   - id: 35a6f0ba-b79a-5e35-b247-f0d4a86b95bc
     methods:
@@ -78,7 +78,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flights-data-cbs
+    - flights-data-payuk1
     - platform-repo-managed
   - id: 8d4eef5a-92d8-572d-b27d-47571deea2d0
     methods:
@@ -92,7 +92,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flights-data-cbs
+    - flights-data-payuk1
     - platform-repo-managed
   - id: 3be41ae2-a511-5955-9227-d9bf9daeda35
     methods:
@@ -106,10 +106,10 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flights-data-cbs
+    - flights-data-payuk1
     - platform-repo-managed
   tags:
-  - flights-data-cbs
+  - flights-data-payuk1
   - platform-repo-managed
 - host: api.kong-air.com
   id: e1426b2f-fefa-5bfb-a00e-01264c65ed9a
@@ -131,7 +131,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - routes-data-cbs
+    - routes-data-payuk1
     - platform-repo-managed
   - id: 32c6b280-a437-5d7f-b407-6a879d8b155e
     methods:
@@ -145,7 +145,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - routes-data-cbs
+    - routes-data-payuk1
     - platform-repo-managed
   - id: eaa41fac-a3d8-5736-99d5-c39a822b09ea
     methods:
@@ -159,10 +159,10 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - routes-data-cbs
+    - routes-data-payuk1
     - platform-repo-managed
   tags:
-  - routes-data-cbs
+  - routes-data-payuk1
   - platform-repo-managed
 - host: bookings.kongair
   id: 22e1521b-9b91-5d2f-917b-4463066f1aed
