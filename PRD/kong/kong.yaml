@@ -45,17 +45,17 @@ plugins:
   - platform-repo-managed
 services:
 - host: api.kong-air.com
-  id: 5e492c13-f9c0-5457-bcf2-cc7ce244258b
-  name: flights-service-cbs
+  id: b0975694-abf2-5667-9bdb-04a9e3e333e1
+  name: flights-service-payuk
   path: /
   plugins: []
   port: 443
   protocol: https
   routes:
-  - id: c3167b3d-7993-57f7-aac2-bd53a9c8fd39
+  - id: aa367cdf-b149-5dd9-b03d-b5f8ba878b5c
     methods:
     - GET
-    name: flights-service-cbs_get-flights
+    name: flights-service-payuk_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -64,12 +64,12 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flights-data-payuk1
+    - flights-data-hsbc
     - platform-repo-managed
-  - id: 35a6f0ba-b79a-5e35-b247-f0d4a86b95bc
+  - id: f3702a3e-8d57-5912-8fbd-8630195a8872
     methods:
     - GET
-    name: flights-service-cbs_get-flight-by-number
+    name: flights-service-payuk_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -78,12 +78,12 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flights-data-payuk1
+    - flights-data-hsbc
     - platform-repo-managed
-  - id: 8d4eef5a-92d8-572d-b27d-47571deea2d0
+  - id: 1d4d71fe-29d8-5a56-896d-47eb7343359e
     methods:
     - GET
-    name: flights-service-cbs_get-flight-details
+    name: flights-service-payuk_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -92,12 +92,12 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flights-data-payuk1
+    - flights-data-hsbc
     - platform-repo-managed
-  - id: 3be41ae2-a511-5955-9227-d9bf9daeda35
+  - id: b01853a1-8dd0-5e9e-9585-a2f42575e708
     methods:
     - GET
-    name: flights-service-cbs_health_get
+    name: flights-service-payuk_health_get
     paths:
     - ~/health$
     plugins: []
@@ -106,10 +106,10 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flights-data-payuk1
+    - flights-data-hsbc
     - platform-repo-managed
   tags:
-  - flights-data-payuk1
+  - flights-data-hsbc
   - platform-repo-managed
 - host: api.kong-air.com
   id: e1426b2f-fefa-5bfb-a00e-01264c65ed9a
@@ -131,7 +131,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - routes-data-payuk1
+    - routes-data-hsbc
     - platform-repo-managed
   - id: 32c6b280-a437-5d7f-b407-6a879d8b155e
     methods:
@@ -145,7 +145,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - routes-data-payuk1
+    - routes-data-hsbc
     - platform-repo-managed
   - id: eaa41fac-a3d8-5736-99d5-c39a822b09ea
     methods:
@@ -159,10 +159,10 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - routes-data-payuk1
+    - routes-data-hsbc
     - platform-repo-managed
   tags:
-  - routes-data-payuk1
+  - routes-data-hsbc
   - platform-repo-managed
 - host: bookings.kongair
   id: 22e1521b-9b91-5d2f-917b-4463066f1aed
