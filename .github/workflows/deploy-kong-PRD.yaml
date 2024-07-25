@@ -38,11 +38,8 @@ jobs:
       - name: deck sync konnect
         if: ${{ env.DEPLOY_TARGET == 'KONNECT' }} || ${{ env.DEPLOY_TARGET == '' }}
         run: |
-           deck gateway sync --select-tag platform-repo-managed \
-               --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }}\
-               --konnect-token ${{ secrets.KONNECT_PAT }} \
-               --konnect-addr ${{ env.KONNECT_ADDR }} \
-               PRD/kong/kong.yaml
+           cat PRD/kong/kong.yaml
+           deck gateway sync --select-tag platform-repo-managed --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }} --konnect-token ${{ secrets.KONNECT_PAT }} --konnect-addr ${{ env.KONNECT_ADDR }} PRD/kong/kong.yaml
 
       - name: deck sync Kong EE
         if: ${{ env.DEPLOY_TARGET == 'EE' }}
