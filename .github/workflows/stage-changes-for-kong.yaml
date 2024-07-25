@@ -127,21 +127,21 @@ jobs:
         with:
           schema: flight-data/routes/openapi.yaml
           base-url: http://localhost:8081
-          #token: ${{ secrets.SCHEMATHESIS_TOKEN }}
+          token: ${{ secrets.SCHEMATHESIS_TOKEN }}
       - name: Contract testing bookings
         uses: schemathesis/action@v1
         with:
           schema: sales/bookings/openapi.yaml
           base-url: http://localhost:8082
           args: '-H "x-consumer-username: dfreese"'
-          #token: ${{ secrets.SCHEMATHESIS_TOKEN }}
+          token: ${{ secrets.SCHEMATHESIS_TOKEN }}
       - name: Contract testing customer
         uses: schemathesis/action@v1
         with:
           schema: sales/customer/openapi.yaml
           base-url: http://localhost:8083
           args: '-H "x-consumer-username: jsmith"'
-          #token: ${{ secrets.SCHEMATHESIS_TOKEN }}
+          token: ${{ secrets.SCHEMATHESIS_TOKEN }}
 
   # Run security testing with OWASP ZAP Scan.
   # The test is based on the OpenAPI specifications of the services.
