@@ -24,8 +24,6 @@ jobs:
   deploy-kong:
     name: Deploy Kong to PRD
     runs-on: ubuntu-latest
-    env:
-      DEPLOY_TARGET: KONNECT
 
     steps:
       - name: Checkout
