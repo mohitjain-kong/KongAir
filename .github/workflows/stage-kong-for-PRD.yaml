@@ -47,7 +47,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF<<$EOF" >> $GITHUB_ENV
-          deck gateway diff --select-tag platform-repo-managed --konnect-control-plane-name KongAir-PRD --konnect-token ${{ secrets.KONNECT_PAT }} PRD/kong/kong.yaml >> $GITHUB_ENV
+          deck gateway diff --select-tag platform-repo-managed --konnect-addr ${{ env.KONNECT_ADDR }} --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }} --konnect-token ${{ secrets.KONNECT_PAT }} PRD/kong/kong.yaml >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
       - name: Create PR to stage changes for the Kong Gateway in production
