@@ -45,18 +45,18 @@ plugins:
   tags:
   - platform-repo-managed
 services:
-- host: flights.kongair
-  id: 0cef4d36-9c39-5ac2-9d9f-190d8ea8a252
-  name: flights-service
+- host: localhost
+  id: 0e003922-c6df-5d09-9ee8-e4a97ab4e3c2
+  name: kongair-flights-service
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: 7b2dbd94-ec5b-5ae8-b6d5-4c8b16ce0b06
+  - id: 15eecea1-2606-57b9-b12f-7e38778a2b23
     methods:
     - GET
-    name: flights-service_get-flights
+    name: kongair-flights-service_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -67,10 +67,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 3210c3ed-9976-500d-ac03-07eaac972ad0
+  - id: 33b6c3e7-b924-5529-a3f8-178ae01a4685
     methods:
     - GET
-    name: flights-service_get-flight-by-number
+    name: kongair-flights-service_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -81,10 +81,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 08020aa2-6106-59ec-903a-3459e7cbb629
+  - id: d41d3bc7-8c15-59fb-ba60-43ba91e4d4ae
     methods:
     - GET
-    name: flights-service_get-flight-details
+    name: kongair-flights-service_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -95,10 +95,10 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: efa95f78-e940-5648-841e-6b71b6fa77ba
+  - id: 9925c535-24c1-54a2-b218-9ee7379e2102
     methods:
     - GET
-    name: flights-service_get-health
+    name: kongair-flights-service_get-health
     paths:
     - ~/health$
     plugins: []
