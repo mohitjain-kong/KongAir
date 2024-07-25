@@ -38,7 +38,7 @@ jobs:
       - name: deck sync konnect
         if: ${{ env.DEPLOY_TARGET == 'KONNECT' }} || ${{ env.DEPLOY_TARGET == '' }}
         run: |
-           echo ${{ env.KONNECT_CP_NAME }}
+           echo "mohit" ${{ env.KONNECT_CP_NAME }} ${{ env.DEPLOY_TARGET }}
           #  deck gateway sync --select-tag platform-repo-managed --konnect-control-plane-name $KONNECT_CP_NAME --konnect-token ${{ secrets.KONNECT_PAT }} PRD/kong/kong.yaml
 
       - name: deck sync Kong EE
