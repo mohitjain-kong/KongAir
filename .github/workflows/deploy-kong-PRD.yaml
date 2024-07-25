@@ -38,7 +38,7 @@ jobs:
           wrapper: false
 
       - name: deck sync konnect
-        if: env.DEPLOY_TARGET == 'KONNECT' || env.DEPLOY_TARGET == ''
+        if: ${{ env.DEPLOY_TARGET == 'KONNECT' }} || ${{ env.DEPLOY_TARGET == '' }}
         run: |
            deck gateway sync --select-tag platform-repo-managed \
                --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }}\
@@ -47,14 +47,14 @@ jobs:
                PRD/kong/kong.yaml
 
       - name: deck sync Kong EE
-        if: env.DEPLOY_TARGET == 'EE'
+        if: ${{ env.DEPLOY_TARGET == 'EE' }}
         run: |
             deck gateway sync --select-tag platform-repo-managed \
                 --kong-addr ${{ env.KONG_EE_ADMIN_API }} \
                 PRD/kong/kong.yaml
       
       - name: deck sync Kong Ingress Controller
-        if: env.DEPLOY_TARGET == 'KIC'
+        if: ${{ env.DEPLOY_TARGET == 'KIC' }}
         run: |
             deck file kong2kic --select-tag platform-repo-managed \
                 -s PRD/kong/kong.yaml | kubectl apply -f -
