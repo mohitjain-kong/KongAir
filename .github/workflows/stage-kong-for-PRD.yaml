@@ -48,7 +48,7 @@ jobs:
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF<<$EOF" >> $GITHUB_ENV
           deck gateway diff --select-tag platform-repo-managed \
-          --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }}\
+          --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }} \
           --konnect-token ${{ secrets.KONNECT_PAT }} \
           --konnect-addr ${{ env.KONNECT_ADDR }} \ 
           PRD/kong/kong.yaml >> $GITHUB_ENV
