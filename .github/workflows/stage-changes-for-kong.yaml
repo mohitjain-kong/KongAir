@@ -93,12 +93,16 @@ jobs:
           echo "Base OAS path: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml"
           cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
       # Check breaking changes in the OAS and create an issue if there are any
+      - name: Verify existence of current OpenAPI spec
+        run: |
+          echo "Current OAS path: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml"
+          cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
       - name: Check OAS breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
-        id: oasdiff  # Static ID
+        id: oasdiff
         with:
-          base: cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-          revision: cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
+          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
           fail-on: ERR
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
