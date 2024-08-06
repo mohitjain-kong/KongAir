@@ -7,4 +7,3 @@ kong.env
 kong.yaml
 *.pid
 .hypothesis/
-flight-data/flights/openapi1.yaml
