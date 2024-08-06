@@ -11,7 +11,7 @@ info:
 
 servers:
 - url: http://localhost:8080
-  description: KongAir API Server
+  description: KongAir API Server 123
  
  
 tags:
