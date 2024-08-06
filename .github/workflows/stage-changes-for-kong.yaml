@@ -87,14 +87,16 @@ jobs:
         run: |
           git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
       # Check breaking changes in the OAS and create an issue if there are any
+      - name: Install oasdiff
+        run: npm install -g @oasdiff/cli
       - name: Check OAS breaking changes
-        uses: oasdiff/oasdiff-action/breaking@main
+        # uses: oasdiff/oasdiff-action/breaking@main
         id: oasdiff  # Static ID
         with:
           base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
           revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
         run: 
-          oasdiff changelog ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+          oasdiff breaking ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
         uses: JasonEtco/create-an-issue@v2
