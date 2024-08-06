@@ -61,7 +61,7 @@ paths:
       operationId: get-flights
       parameters:
         - name: date
-          in: header
+          in: query
           description: Filter by date (defaults to current day)
           required: false
           style: form
@@ -69,37 +69,37 @@ paths:
           schema:
             type: string
             format: date
-      responses:
-        '200':
-          description: Successful respone with scheduled flights
-          headers:
-           hostname:
-             description: "The hostname of the machine fulfilling the request."
-             schema:
-               type: string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Flight'
-              examples:
-                Example Flights List:
-                  value: | 
-                   [
-                      {
-                        "number": "KD924",
-                        "route_id": "LHR-SFO",
-                        "scheduled_departure": "2024-03-20T09:12:28Z",
-                        "scheduled_arrival": "2024-03-20T19:12:28Z"
-                      },
-                      {
-                        "number": "KD925",
-                        "route_id": "SFO-LHR",
-                        "scheduled_departure": "2024-03-21T09:12:28Z",
-                        "scheduled_arrival": "2024-03-21T19:12:28Z"
-                      }
-                   ]
+      # responses:
+      #   '200':
+      #     description: Successful respone with scheduled flights
+      #     headers:
+      #      hostname:
+      #        description: "The hostname of the machine fulfilling the request."
+      #        schema:
+      #          type: string
+      #     content:
+      #       application/json:
+      #         schema:
+      #           type: array
+      #           items:
+      #             $ref: '#/components/schemas/Flight'
+      #         examples:
+      #           Example Flights List:
+      #             value: | 
+      #              [
+      #                 {
+      #                   "number": "KD924",
+      #                   "route_id": "LHR-SFO",
+      #                   "scheduled_departure": "2024-03-20T09:12:28Z",
+      #                   "scheduled_arrival": "2024-03-20T19:12:28Z"
+      #                 },
+      #                 {
+      #                   "number": "KD925",
+      #                   "route_id": "SFO-LHR",
+      #                   "scheduled_departure": "2024-03-21T09:12:28Z",
+      #                   "scheduled_arrival": "2024-03-21T19:12:28Z"
+      #                 }
+      #              ]
 
   "/flights/{flightNumber}":
     get:
