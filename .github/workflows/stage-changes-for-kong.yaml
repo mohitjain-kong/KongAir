@@ -90,15 +90,14 @@ jobs:
       - name: Base OAS
         run: |
           git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-          echo "git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml"
+          echo "${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml"
       # Check breaking changes in the OAS and create an issue if there are any
       - name: Check OAS breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
         id: oasdiff  # Static ID
         with:
-          base: HEAD~1
-          revision: HEAD
-          file: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
+          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
           fail-on: ERR
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
