@@ -5,13 +5,13 @@ openapi: 3.0.0
 info:
   description: KongAir Flights service provides the scheduled flights for KongAir
   version: 1.1.0
-  title: KongAir Flights Service 123
+  title: KongAir Flights Service
   contact:
     name: Kong, Inc.
 
 servers:
 - url: http://localhost:8080
-  description: KongAir API Server 123
+  description: KongAir API Server
  
  
 tags:
@@ -159,13 +159,13 @@ paths:
                   message:
                     type: string
 
-  "/flights/{flightNumber}/details":
+  "/flights/{flightNumber}/details1":
     get:
-      summary: Fetch more details about a flight
-      description: Fetch more details about a flight
+      summary: Fetch more details1 about a flight
+      description: Fetch more details1 about a flight
       tags:
       - flight-data
-      operationId: get-flight-details
+      operationId: get-flight-details1
       parameters:
       - name: flightNumber
         in: path
@@ -177,7 +177,7 @@ paths:
           type: string
       responses:
         '200':
-          description: Successful response with the requested flight details
+          description: Successful response with the requested flight details1
           headers:
            hostname:
              description: "The hostname of the machine fulfilling the request."
@@ -186,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlightDetails'
+                $ref: '#/components/schemas/FlightDetails1'
         '400':
           description: Invalid format for parameter
           content:
@@ -227,7 +227,7 @@ components:
         - route_id
         - scheduled_departure
         - scheduled_arrival
-    FlightDetails:
+    FlightDetails1:
       type: object
       properties:
         flight_number:
