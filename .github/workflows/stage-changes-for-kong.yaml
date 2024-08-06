@@ -96,8 +96,9 @@ jobs:
         uses: oasdiff/oasdiff-action/breaking@main
         id: oasdiff  # Static ID
         with:
-          base: git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
-          revision: git show HEAD:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+          base: HEAD~1
+          revision: HEAD
+          file: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
           fail-on: ERR
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
