@@ -120,20 +120,6 @@ services:
   port: 8081
   protocol: http
   routes:
-  - id: 4122cd9a-0251-5d88-be2d-676c0598e642
-    methods:
-    - GET
-    name: routes-service_get-health
-    paths:
-    - ~/health$
-    plugins: []
-    protocols:
-    - https
-    regex_priority: 200
-    strip_path: false
-    tags:
-    - flight-data
-    - platform-repo-managed
   - id: 89f28ad3-74db-5149-8fa5-f7fffbfda79c
     methods:
     - GET
