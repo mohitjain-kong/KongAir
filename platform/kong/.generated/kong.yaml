@@ -81,12 +81,12 @@ services:
     tags:
     - flight-data
     - platform-repo-managed
-  - id: 4c2fd9c3-56f0-5b52-8678-ac3198cba58d
+  - id: d41d3bc7-8c15-59fb-ba60-43ba91e4d4ae
     methods:
     - GET
-    name: kongair-flights-service_get-flight-details1
+    name: kongair-flights-service_get-flight-details
     paths:
-    - ~/flights/(?<flightnumber>[^#?/]+)/details1$
+    - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
     protocols:
     - https
