@@ -44,8 +44,9 @@ jobs:
       - name: deck sync Kong EE
         if: ${{ env.DEPLOY_TARGET == 'EE' }}
         run: |
+            echo "${{ env.KONNECT_CP_NAME }} ${{ env.DEPLOY_TARGET }}"
             deck gateway sync --select-tag platform-repo-managed \
-                --kong-addr ${{ env.KONG_EE_ADMIN_API }} \
+                --kong-addr http://34.142.41.180:8001 \
                 PRD/kong/kong.yaml
       
       - name: deck sync Kong Ingress Controller
