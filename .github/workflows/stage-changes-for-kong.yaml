@@ -90,18 +90,13 @@ jobs:
           git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
           echo "git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml"
       # Check breaking changes in the OAS and create an issue if there are any
-      # - name: Check OAS breaking changes
-      #   uses: oasdiff/oasdiff-action/breaking@main
-      #   id: oasdiff  # Static ID
-      #   with:
-      #     base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-      #     revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
-      #     fail-on: ERR
-      - name: Running OpenAPI Spec diff action
+      - name: Check OAS breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
+        id: oasdiff  # Static ID
         with:
-          base: https://raw.githubusercontent.com/Tufin/oasdiff/main/data/openapi-test1.yaml
-          revision: https://raw.githubusercontent.com/Tufin/oasdiff/main/data/openapi-test3.yaml
+          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
+          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+          fail-on: ERR
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
         uses: JasonEtco/create-an-issue@v2
