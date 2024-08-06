@@ -90,7 +90,8 @@ jobs:
       - name: Base OAS
         run: |
           git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-          echo "${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml"
+          echo "Base OAS path: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml"
+          cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
       # Check breaking changes in the OAS and create an issue if there are any
       - name: Check OAS breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
