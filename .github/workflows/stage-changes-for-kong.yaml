@@ -90,11 +90,9 @@ jobs:
       - name: Install oasdiff
         run: npm install -g @oasdiff/cli
       - name: Check OAS breaking changes
-        # uses: oasdiff/oasdiff-action/breaking@main
+
         id: oasdiff  # Static ID
-        with:
-          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
+
         run: 
           oasdiff breaking ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
       - name: Create Issue on Breaking Change
