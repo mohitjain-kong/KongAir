@@ -46,7 +46,7 @@ jobs:
         run: |
             echo "${{ env.KONNECT_CP_NAME }} ${{ env.DEPLOY_TARGET }}"
             deck gateway sync --select-tag platform-repo-managed \
-                --kong-addr http://34.142.41.180:8001 \
+                --kong-addr http://34.142.41.180:8001 -w apiops --timeout 60 \
                 PRD/kong/kong.yaml
       
       # - name: deck sync Kong Ingress Controller
