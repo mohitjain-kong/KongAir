@@ -99,7 +99,7 @@ jobs:
           cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
       - name: List directory contents for debugging
         run: |
-          echo "Listing directory contents for ${matrix.app.dir}/${matrix.app.name}:"
+          echo "Listing directory contents for ${{ matrix.app.dir }}/${{ matrix.app.name }}:"
           ls -alh ${{ matrix.app.dir }}/${{ matrix.app.name }}
       - name: Check OAS breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
