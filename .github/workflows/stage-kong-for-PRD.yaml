@@ -48,10 +48,10 @@ jobs:
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF<<$EOF" >> $GITHUB_ENV
 
-          deck gateway diff --select-tag platform-repo-managed --kong-addr ${{ env.KONG_EE_ADMIN_API }} -w apiops PRD/kong/kong.yaml >> $GITHUB_ENV
+          deck gateway diff --select-tag platform-repo-managed --kong-addr http://34.142.41.180:8001 -w apiops PRD/kong/kong.yaml >> $GITHUB_ENV
 
           # deck gateway diff --select-tag platform-repo-managed --konnect-addr https://us.api.konghq.com --konnect-control-plane-name education --konnect-token ${{ secrets.KONNECT_PAT }} PRD/kong/kong.yaml >> $GITHUB_ENV
-          
+
           echo "$EOF" >> $GITHUB_ENV
 
       - name: Create PR to stage changes for the Kong Gateway in production
