@@ -18,7 +18,7 @@ tags:
   - name: flight-data
 
 paths:
-  /health:
+  /heasslth:
     get:
       operationId: get-health
       summary: Health check endpoint for Kubernetes
