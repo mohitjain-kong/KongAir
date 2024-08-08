@@ -165,23 +165,18 @@ services:
   tags:
   - flight-data
   - platform-repo-managed
-- host: bookings.kongair
-  id: 22e1521b-9b91-5d2f-917b-4463066f1aed
-  name: bookings-service
+- host: localhost
+  id: 34f2b352-baf8-55f6-8595-8a923cedc2df
+  name: bookings-service-1
   path: /
-  plugins:
-  - _config: default-jwt
-    enabled: true
-    name: jwt
-    tags:
-    - platform-repo-managed
+  plugins: []
   port: 8082
   protocol: http
   routes:
-  - id: 9bd2c85f-5d13-5910-838c-9fad63e8a54d
+  - id: e96de241-6172-5fde-8534-7a6c47cf0ba1
     methods:
     - GET
-    name: bookings-service_get-bookings
+    name: bookings-service-1_get-bookings
     paths:
     - ~/bookings$
     plugins: []
@@ -192,10 +187,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: 4e2f555e-980c-5241-a640-9f0a67ab6693
+  - id: c677a466-7c3c-5dc2-9ae0-87c799c2cfa1
     methods:
     - POST
-    name: bookings-service_post-booking
+    name: bookings-service-1_post-booking
     paths:
     - ~/bookings$
     plugins: []
@@ -206,10 +201,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: 61beda28-88aa-5d73-af7c-b78d6a386e9d
+  - id: e5c59593-ef84-5a65-93f6-eda51b1e3f48
     methods:
     - GET
-    name: bookings-service_get-health
+    name: bookings-service-1_get-health
     paths:
     - ~/health$
     plugins: []
