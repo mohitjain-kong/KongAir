@@ -133,6 +133,7 @@ services:
     strip_path: false
     tags:
     - flight-data
+    - jain
     - platform-repo-managed
   - id: 89f28ad3-74db-5149-8fa5-f7fffbfda79c
     methods:
@@ -147,6 +148,7 @@ services:
     strip_path: false
     tags:
     - flight-data
+    - jain
     - platform-repo-managed
   - id: 831bf89a-08be-5dbd-bcd2-aa2348d784d3
     methods:
@@ -161,9 +163,11 @@ services:
     strip_path: false
     tags:
     - flight-data
+    - jain
     - platform-repo-managed
   tags:
   - flight-data
+  - jain
   - platform-repo-managed
 - host: bookings.kongair
   id: 22e1521b-9b91-5d2f-917b-4463066f1aed
@@ -191,6 +195,7 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   - id: 4e2f555e-980c-5241-a640-9f0a67ab6693
     methods:
@@ -205,6 +210,7 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   - id: 61beda28-88aa-5d73-af7c-b78d6a386e9d
     methods:
@@ -219,9 +225,11 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   tags:
   - sales
+  - hsbc
   - platform-repo-managed
 - host: customer.kongair
   id: 690e812e-2873-566a-b02f-d03e0bf8ff69
