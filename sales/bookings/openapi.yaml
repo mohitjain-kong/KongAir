@@ -17,7 +17,7 @@ tags:
   - name: sales
 
 paths:
-  /heasslth:
+  /heassslth:
     get:
       summary: Health check endpoint for Kubernetes
       description: Endpoint that returns the service health status.
