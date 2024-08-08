@@ -57,9 +57,9 @@ jobs:
   oas-break:
 
     name: Check breaking changes
-    if: false
+    # if: false
     needs: has-changes
-    # if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
+    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
 
     runs-on: ubuntu-latest
     strategy:
@@ -110,7 +110,7 @@ jobs:
   # The tests are based on the OpenAPI specifications of the services.
   contract-test:
     name: Contract testing
-    if: false
+    # if: false
     needs: has-changes
     runs-on: ubuntu-latest
     steps:
@@ -151,7 +151,7 @@ jobs:
   # The test is based on the OpenAPI specifications of the services.
   security-test:
     name: Security testing
-    if: false
+    # if: false
     runs-on: ubuntu-latest
     needs: has-changes
     strategy:
@@ -181,7 +181,7 @@ jobs:
   # Run load testing with K6. The script is generated from the OpenAPI specification.
   load-test:
     name: Load testing
-    if: false
+    # if: false
     runs-on: ubuntu-latest
     needs: has-changes
     strategy:
@@ -226,8 +226,8 @@ jobs:
 
   oas-to-kong:
     name: Convert OAS to Kong configurations
-    # needs: [has-changes, oas-break, contract-test]
-    # if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
+    needs: [has-changes, oas-break, contract-test]
+    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
@@ -268,7 +268,7 @@ jobs:
           deck file openapi2kong -s sales/bookings/openapi.yaml | \
             deck file patch  sales/bookings/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/sales-bookings-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales hsbc
 
       - name: Convert Customers API to Kong
         # In two steps, convert the OpenAPI Spec to a Kong declarative configuration
@@ -341,7 +341,7 @@ jobs:
     # obtain the changelog between the previous and current OAS for all services
     # and create a PR comment with the changelog
     needs: oas-to-kong
-    if: false
+    # if: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
