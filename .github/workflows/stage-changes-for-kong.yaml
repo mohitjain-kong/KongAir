@@ -93,8 +93,8 @@ jobs:
         uses: oasdiff/oasdiff-action/breaking@main
         id: oasdiff
         with:
-          base: https://raw.githubusercontent.com/Tufin/oasdiff/main/data/openapi-test1.yaml
-          revision: https://raw.githubusercontent.com/Tufin/oasdiff/main/data/openapi-test3.yaml
+          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
+          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
         # with:
         #   base: '${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml'
         #   revision: '${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml'
