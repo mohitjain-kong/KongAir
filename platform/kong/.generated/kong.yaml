@@ -191,7 +191,6 @@ services:
     strip_path: false
     tags:
     - sales
-    - mohit
     - platform-repo-managed
   - id: 4e2f555e-980c-5241-a640-9f0a67ab6693
     methods:
@@ -206,7 +205,6 @@ services:
     strip_path: false
     tags:
     - sales
-    - mohit
     - platform-repo-managed
   - id: 61beda28-88aa-5d73-af7c-b78d6a386e9d
     methods:
@@ -221,11 +219,9 @@ services:
     strip_path: false
     tags:
     - sales
-    - mohit
     - platform-repo-managed
   tags:
   - sales
-  - mohit
   - platform-repo-managed
 - host: customer.kongair
   id: 690e812e-2873-566a-b02f-d03e0bf8ff69
