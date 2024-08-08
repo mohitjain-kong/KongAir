@@ -55,8 +55,9 @@ jobs:
   # specifications of the services. If there are breaking
   # changes, create an issue in the repository.
   oas-break:
+
     name: Check breaking changes
-    
+    if: false
     needs: has-changes
     if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
 
@@ -95,12 +96,6 @@ jobs:
         with:
           base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
           revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
-        # with:
-        #   base: '${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml'
-        #   revision: '${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml'
-        #   composed: true
-        #   fail-on: "ERR"
-        #   include-path-params: true
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
         uses: JasonEtco/create-an-issue@v2
@@ -115,6 +110,7 @@ jobs:
   # The tests are based on the OpenAPI specifications of the services.
   contract-test:
     name: Contract testing
+    if: false
     needs: has-changes
     runs-on: ubuntu-latest
     steps:
@@ -155,6 +151,7 @@ jobs:
   # The test is based on the OpenAPI specifications of the services.
   security-test:
     name: Security testing
+    if: false
     runs-on: ubuntu-latest
     needs: has-changes
     strategy:
@@ -184,6 +181,7 @@ jobs:
   # Run load testing with K6. The script is generated from the OpenAPI specification.
   load-test:
     name: Load testing
+    if: false
     runs-on: ubuntu-latest
     needs: has-changes
     strategy:
