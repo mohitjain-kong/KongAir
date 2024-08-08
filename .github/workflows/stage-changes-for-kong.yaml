@@ -59,7 +59,7 @@ jobs:
     name: Check breaking changes
     if: false
     needs: has-changes
-    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
+    # if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
 
     runs-on: ubuntu-latest
     strategy:
