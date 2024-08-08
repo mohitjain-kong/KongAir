@@ -97,6 +97,7 @@ jobs:
           revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
           composed: true
           fail-on: "ERR"
+          include-path-params: true
       - name: Create Issue on Breaking Change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
         uses: JasonEtco/create-an-issue@v2
