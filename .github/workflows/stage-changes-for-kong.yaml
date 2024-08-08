@@ -327,12 +327,12 @@ jobs:
           name: kong-configurations
           path: .github/artifacts/kong/*.yaml
 
-      # - name: Create PR for changed Kong Gateway Configuration
-      #   id: create_pr
-      #   # The only file that should be changed for this PR is platform/kong/.generated/kong.yaml
-      #   uses: peter-evans/create-pull-request@v5
-      #   with:
-      #     title: Stage Kong Gateway Configuration
+      - name: Create PR for changed Kong Gateway Configuration
+        id: create_pr
+        # The only file that should be changed for this PR is platform/kong/.generated/kong.yaml
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Stage Kong Gateway Configuration
       
   # Obtain the changelog between the previous and current OAS for all services
   # and create a PR comment with the changelog. This is useful for tracking changes
