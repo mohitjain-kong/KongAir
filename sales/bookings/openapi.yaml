@@ -5,7 +5,7 @@ openapi: 3.0.0
 info:
   description: KongAir Bookings service provides customers the ability to book and retrieve flight bookings on KongAir
   version: 0.1.0
-  title: Bookings Service 1
+  title: Bookings Service
   contact:
     name: Kong Inc.
 
