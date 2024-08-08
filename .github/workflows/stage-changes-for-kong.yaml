@@ -226,8 +226,8 @@ jobs:
 
   oas-to-kong:
     name: Convert OAS to Kong configurations
-    needs: [has-changes, oas-break, contract-test]
-    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
+    # needs: [has-changes, oas-break, contract-test]
+    # if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
@@ -341,6 +341,7 @@ jobs:
     # obtain the changelog between the previous and current OAS for all services
     # and create a PR comment with the changelog
     needs: oas-to-kong
+    if: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
