@@ -65,7 +65,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 3210c3ed-9976-500d-ac03-07eaac972ad0
     methods:
@@ -79,7 +79,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 08020aa2-6106-59ec-903a-3459e7cbb629
     methods:
@@ -93,7 +93,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: efa95f78-e940-5648-841e-6b71b6fa77ba
     methods:
@@ -107,10 +107,10 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   tags:
-  - flight-data
+  - flight-data1
   - platform-repo-managed
 - host: routes.kongair
   id: 5bbc0ad8-3b7c-5dfe-a676-b28f30523a6f
@@ -191,6 +191,7 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   - id: 4e2f555e-980c-5241-a640-9f0a67ab6693
     methods:
@@ -205,6 +206,7 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   - id: 61beda28-88aa-5d73-af7c-b78d6a386e9d
     methods:
@@ -219,9 +221,11 @@ services:
     strip_path: false
     tags:
     - sales
+    - hsbc
     - platform-repo-managed
   tags:
   - sales
+  - hsbc
   - platform-repo-managed
 - host: customer.kongair
   id: 690e812e-2873-566a-b02f-d03e0bf8ff69
