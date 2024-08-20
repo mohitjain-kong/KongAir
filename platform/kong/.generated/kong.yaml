@@ -65,7 +65,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: f74cb0d2-51b6-585b-9694-b24a76fd4fe2
     methods:
@@ -79,7 +79,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 67925354-3292-5629-b6c2-6ca9c26d7d4a
     methods:
@@ -93,7 +93,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 82872bdb-cbad-546c-8db9-0fbbcab4c515
     methods:
@@ -107,10 +107,10 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   tags:
-  - flight-data
+  - flight-data1
   - platform-repo-managed
 - host: routes.kongair
   id: 5bbc0ad8-3b7c-5dfe-a676-b28f30523a6f
