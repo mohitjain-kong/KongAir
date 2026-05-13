@@ -116,18 +116,18 @@ services:
   tags:
   - flight-data
   - platform-repo-managed
-- host: routes.kongair
-  id: 5bbc0ad8-3b7c-5dfe-a676-b28f30523a6f
-  name: routes-service
+- host: localhost
+  id: 81635d48-3b91-5034-b90e-8986a8bf87db
+  name: routes-service-with-fca-portal
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 4122cd9a-0251-5d88-be2d-676c0598e642
+  - id: 4a9bfd39-d555-525e-bc34-9da40d3b15bc
     methods:
     - GET
-    name: routes-service_get-health
+    name: routes-service-with-fca-portal_get-health
     paths:
     - ~/health$
     plugins: []
@@ -138,10 +138,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 89f28ad3-74db-5149-8fa5-f7fffbfda79c
+  - id: 862aa704-17ca-55f4-8fc0-094cc2323612
     methods:
     - GET
-    name: routes-service_get-routes
+    name: routes-service-with-fca-portal_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -152,10 +152,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 831bf89a-08be-5dbd-bcd2-aa2348d784d3
+  - id: 4bbdc0ea-d06b-51e8-bebd-5f28fc4fa050
     methods:
     - GET
-    name: routes-service_get-route
+    name: routes-service-with-fca-portal_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
