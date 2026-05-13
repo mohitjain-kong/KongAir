@@ -270,7 +270,15 @@ GET  /v3/apis
 POST /v3/apis
      body: { "name": "KongAir Flights", "version": "1.0.0", "description": "..." }
 
-# 2. Upload a spec version
+# 2. Find existing version or create new (upsert logic)
+GET  /v3/apis/{id}/versions
+     → find by: .data[] | select(.version == "1.0.0") | .id
+
+# If version exists → PATCH (update spec content in place)
+PATCH /v3/apis/{id}/versions/{version_id}
+     body: { "spec": { "content": "<raw-yaml-string>" } }
+
+# If version does not exist → POST (first run only)
 POST /v3/apis/{id}/versions
      body: { "spec": { "content": "<raw-yaml-string>" } }
 
@@ -278,6 +286,8 @@ POST /v3/apis/{id}/versions
 PUT  /v3/apis/{id}/publications/{PORTAL_ID_V3}
      body: { "visibility": "public" }
 ```
+
+> **Why PATCH instead of POST?** The v3 Catalog treats version strings as unique per API. `POST /versions` with the same version string returns `409 Conflict` on every subsequent run. The fix is to `GET` existing versions, match on the `version` field (not `name`), and `PATCH` the existing entry.
 
 ---
 
@@ -344,6 +354,8 @@ Konnect may have resources created manually (via UI or Admin API). Using `--sele
 | ACME `storage: kong` invalid on Konnect | Konnect does not support local Kong storage | Changed to `storage: redis` with `storage_config.redis` config |
 | Duplicate API products on each pipeline run | URL filter (`filter[name]=KongAir Flights`) fails with spaces | Fixed with client-side jq: `select(.name == $name)` |
 | Wrong portal ID for v3 Catalog | v2 portal ID used in v3 publication call | Introduced `KONNECT_PORTAL_ID_V3` variable for v3 catalog portal |
+| Catalog spec not updating — `409 Conflict` on every run | `POST /v3/apis/{id}/versions` fails if version string already exists; also used `.name` field which doesn't exist (correct field is `.version`) | Upsert logic: `GET` versions → `select(.version == $v)` → `PATCH` if exists, `POST` if not |
+| OAS `info.title` changes not triggering portal republish | `deploy-kong-PRD.yaml` only watched `PRD/kong/kong.yaml` — title changes don't alter gateway config so no pipeline ran | Added all `openapi.yaml` paths to Workflow 3 trigger paths |
 
 ---
 
