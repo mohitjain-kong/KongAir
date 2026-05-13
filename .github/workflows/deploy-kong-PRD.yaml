@@ -120,3 +120,47 @@ jobs:
             fi
             echo "Published spec for $PRODUCT_NAME v$VERSION to Dev Portal"
           done
+
+      - name: Publish APIs to Konnect Catalog
+        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
+        run: |
+          for app in \
+            "KongAir Flights:flight-data/flights/openapi.yaml" \
+            "KongAir Routes:flight-data/routes/openapi.yaml" \
+            "KongAir Bookings:sales/bookings/openapi.yaml" \
+            "KongAir Customer:sales/customer/openapi.yaml"; do
+
+            API_NAME="${app%%:*}"
+            SPEC_FILE="${app##*:}"
+            VERSION=$(yq '.info.version' "$SPEC_FILE")
+            SPEC_CONTENT=$(cat "$SPEC_FILE" | jq -Rs '.')
+
+            # Get or create catalog API
+            API_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v3/apis" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r --arg name "$API_NAME" '.data[] | select(.name == $name) | .id // empty' | head -1)
+
+            if [ -z "$API_ID" ]; then
+              API_ID=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/apis" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"$API_NAME\", \"version\": \"$VERSION\", \"description\": \"Managed by APIOps pipeline\"}" \
+                | jq -r '.id')
+              echo "Created catalog API: $API_NAME ($API_ID)"
+            else
+              echo "Found existing catalog API: $API_NAME ($API_ID)"
+            fi
+
+            # Upload spec version
+            curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"spec\": {\"content\": $SPEC_CONTENT}}" > /dev/null
+
+            # Publish to FCA Demo portal
+            curl -s -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+              -H "Content-Type: application/json" \
+              -d '{"visibility": "public"}' > /dev/null
+
+            echo "Published $API_NAME v$VERSION to Konnect Catalog and FCA Demo portal"
+          done
