@@ -7,7 +7,6 @@ on:
       - workflow/**
     paths:
       - platform/kong/.generated/kong.yaml
-      - .github/workflows/stage-kong-for-PRD.yaml
   workflow_dispatch:
 
 jobs:
@@ -25,6 +24,7 @@ jobs:
   stage-kong-for-prd:
     name: Stage Kong changes for PRD
     runs-on: ubuntu-latest
+    environment: prd
 
     steps:
       - name: Checkout
@@ -33,7 +33,7 @@ jobs:
       - name: Setup deck
         uses: kong/setup-deck@v1
         with:
-          deck-version: '1.39.2'
+          deck-version: '1.58.0'
           wrapper: false
 
       - name: stage combined file for PRD
@@ -47,9 +47,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF<<$EOF" >> $GITHUB_ENV
-
-          deck gateway diff --select-tag platform-repo-managed --kong-addr http://34.142.41.180:8001 -w apiops PRD/kong/kong.yaml >> $GITHUB_ENV
-
+          deck gateway diff --select-tag platform-repo-managed --konnect-addr "${{ vars.KONNECT_ADDR }}" --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" --konnect-token ${{ secrets.KONNECT_PAT }} PRD/kong/kong.yaml >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
       - name: Create PR to stage changes for the Kong Gateway in production
@@ -57,6 +55,6 @@ jobs:
         with:
           title: "❗PRD❗: Staged changes for Kong Gateway PRD deployment"
           branch: "PRD/kong"
+          base: main
           labels: "PRD,kong"
           body: "Merging this PR will result in the following changes deployed to PRD \n\n ```\n${{env.DIFF}}\n```"
-
