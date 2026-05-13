@@ -24,8 +24,7 @@ jobs:
   deploy-kong:
     name: Deploy Kong to PRD
     runs-on: ubuntu-latest
-    env:
-      DEPLOY_TARGET: KONNECT
+    environment: prd
 
     steps:
       - name: Checkout
@@ -38,23 +37,23 @@ jobs:
           wrapper: false
 
       - name: deck sync konnect
-        if: env.DEPLOY_TARGET == 'KONNECT' || env.DEPLOY_TARGET == ''
+        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
         run: |
            deck gateway sync --select-tag platform-repo-managed \
-               --konnect-control-plane-name ${{ env.KONNECT_CP_NAME }}\
+               --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
                --konnect-token ${{ secrets.KONNECT_PAT }} \
-               --konnect-addr ${{ env.KONNECT_ADDR }} \
+               --konnect-addr "${{ vars.KONNECT_ADDR }}" \
                PRD/kong/kong.yaml
 
       - name: deck sync Kong EE
-        if: env.DEPLOY_TARGET == 'EE'
+        if: vars.DEPLOY_TARGET == 'EE'
         run: |
             deck gateway sync --select-tag platform-repo-managed \
-                --kong-addr ${{ env.KONG_EE_ADMIN_API }} \
+                --kong-addr "${{ vars.KONG_EE_ADMIN_API }}" \
                 PRD/kong/kong.yaml
-      
+
       - name: deck sync Kong Ingress Controller
-        if: env.DEPLOY_TARGET == 'KIC'
+        if: vars.DEPLOY_TARGET == 'KIC'
         run: |
             deck file kong2kic --select-tag platform-repo-managed \
                 -s PRD/kong/kong.yaml | kubectl apply -f -
