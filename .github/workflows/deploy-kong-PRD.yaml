@@ -154,17 +154,19 @@ jobs:
               echo "Found existing catalog API: $API_NAME ($API_ID)"
             fi
 
-            # Upload spec version
-            curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
+            # Upload spec version (always create new — Catalog keeps version history)
+            UPLOAD_RESULT=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
               -H "Content-Type: application/json" \
-              -d "{\"spec\": {\"content\": $SPEC_CONTENT}}" > /dev/null
+              -d "{\"spec\": {\"content\": $SPEC_CONTENT}}")
+            echo "Spec upload result for $API_NAME: $(echo $UPLOAD_RESULT | jq '{id, created_at, status, title}')"
 
-            # Publish to FCA Demo portal
-            curl -s -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
+            # Publish to v3 portal
+            PUBLISH_RESULT=$(curl -s -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
               -H "Content-Type: application/json" \
-              -d '{"visibility": "public"}' > /dev/null
+              -d '{"visibility": "public"}')
+            echo "Publish result for $API_NAME: $(echo $PUBLISH_RESULT | jq '{status, title, visibility}')"
 
             echo "Published $API_NAME v$VERSION to Konnect Catalog and FCA Demo portal"
           done
