@@ -124,7 +124,7 @@ jobs:
           deck file openapi2kong -s sales/bookings/openapi.yaml | \
             deck file patch  sales/bookings/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/sales-bookings-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales hsbc
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
 
       - name: Convert Customers API to Kong
         run: |
