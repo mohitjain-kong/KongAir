@@ -117,17 +117,17 @@ services:
   - flight-data1
   - platform-repo-managed
 - host: localhost
-  id: 81635d48-3b91-5034-b90e-8986a8bf87db
-  name: routes-service-with-fca-portal
+  id: 6c25b41b-e80f-5049-9311-b46466e48257
+  name: routes-service-with-fca
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 4a9bfd39-d555-525e-bc34-9da40d3b15bc
+  - id: 3dd9fb66-1a64-534c-bcf1-2154da2ceed3
     methods:
     - GET
-    name: routes-service-with-fca-portal_get-health
+    name: routes-service-with-fca_get-health
     paths:
     - ~/health$
     plugins: []
@@ -138,10 +138,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 862aa704-17ca-55f4-8fc0-094cc2323612
+  - id: cc24cf62-98ef-5d84-880d-6913f6513ef3
     methods:
     - GET
-    name: routes-service-with-fca-portal_get-routes
+    name: routes-service-with-fca_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -152,10 +152,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 4bbdc0ea-d06b-51e8-bebd-5f28fc4fa050
+  - id: eda7aae5-bac3-560d-9ad1-80d2b0653567
     methods:
     - GET
-    name: routes-service-with-fca-portal_get-route
+    name: routes-service-with-fca_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -222,23 +222,18 @@ services:
   tags:
   - sales
   - platform-repo-managed
-- host: customer.kongair
-  id: 690e812e-2873-566a-b02f-d03e0bf8ff69
-  name: customer-information-service
+- host: localhost
+  id: a6a4ea44-418e-55e2-a0e5-d988dd60238c
+  name: customer-information-service-fca
   path: /
-  plugins:
-  - _config: default-jwt
-    enabled: true
-    name: jwt
-    tags:
-    - platform-repo-managed
+  plugins: []
   port: 8083
   protocol: http
   routes:
-  - id: 5984bb2d-328e-5785-a06a-f639c3a59d94
+  - id: f1104806-0208-5e1a-bb75-7bd3b67d8aa8
     methods:
     - GET
-    name: customer-information-service_get-cust-info
+    name: customer-information-service-fca_get-cust-info
     paths:
     - ~/customer$
     plugins: []
@@ -249,10 +244,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: daab72cb-8cea-5be5-a9b2-227c3a7ef607
+  - id: 3f483af0-ee9e-5214-bd5d-a0e4ad67fb0e
     methods:
     - GET
-    name: customer-information-service_get-health
+    name: customer-information-service-fca_get-health
     paths:
     - ~/health$
     plugins: []
