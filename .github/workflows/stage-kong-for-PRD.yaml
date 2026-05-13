@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - workflow/**
+      - feature
     paths:
       - platform/kong/.generated/kong.yaml
       - .github/workflows/stage-kong-for-PRD.yaml
