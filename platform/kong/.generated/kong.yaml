@@ -69,7 +69,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: d65a1799-11cd-5ac1-ae4e-4462676cc6c3
     methods:
@@ -83,7 +83,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: b31f3da0-d716-564c-8ac4-6bb347902e55
     methods:
@@ -97,7 +97,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 840f6f0b-403d-5a2a-96d1-5790cc3bc583
     methods:
@@ -111,23 +111,23 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   tags:
-  - flight-data
+  - flight-data1
   - platform-repo-managed
-- host: routes.kongair
-  id: 5bbc0ad8-3b7c-5dfe-a676-b28f30523a6f
-  name: routes-service
+- host: localhost
+  id: 81635d48-3b91-5034-b90e-8986a8bf87db
+  name: routes-service-with-fca-portal
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 4122cd9a-0251-5d88-be2d-676c0598e642
+  - id: 4a9bfd39-d555-525e-bc34-9da40d3b15bc
     methods:
     - GET
-    name: routes-service_get-health
+    name: routes-service-with-fca-portal_get-health
     paths:
     - ~/health$
     plugins: []
@@ -138,10 +138,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 89f28ad3-74db-5149-8fa5-f7fffbfda79c
+  - id: 862aa704-17ca-55f4-8fc0-094cc2323612
     methods:
     - GET
-    name: routes-service_get-routes
+    name: routes-service-with-fca-portal_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -152,10 +152,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 831bf89a-08be-5dbd-bcd2-aa2348d784d3
+  - id: 4bbdc0ea-d06b-51e8-bebd-5f28fc4fa050
     methods:
     - GET
-    name: routes-service_get-route
+    name: routes-service-with-fca-portal_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -169,23 +169,18 @@ services:
   tags:
   - route-data
   - platform-repo-managed
-- host: bookings.kongair
-  id: 22e1521b-9b91-5d2f-917b-4463066f1aed
-  name: bookings-service
+- host: localhost
+  id: e51d368f-0d2e-5877-8854-ce49d173f9b8
+  name: bookings-service-fca
   path: /
-  plugins:
-  - _config: default-jwt
-    enabled: true
-    name: jwt
-    tags:
-    - platform-repo-managed
+  plugins: []
   port: 8082
   protocol: http
   routes:
-  - id: 9bd2c85f-5d13-5910-838c-9fad63e8a54d
+  - id: b8f47ae3-172b-554f-8cd7-ca25fb96219b
     methods:
     - GET
-    name: bookings-service_get-bookings
+    name: bookings-service-fca_get-bookings
     paths:
     - ~/bookings$
     plugins: []
@@ -195,12 +190,11 @@ services:
     strip_path: false
     tags:
     - sales
-    - hsbc
     - platform-repo-managed
-  - id: 4e2f555e-980c-5241-a640-9f0a67ab6693
+  - id: 84fa5fd3-6bbc-5f8c-9478-037654682239
     methods:
     - POST
-    name: bookings-service_post-booking
+    name: bookings-service-fca_post-booking
     paths:
     - ~/bookings$
     plugins: []
@@ -210,12 +204,11 @@ services:
     strip_path: false
     tags:
     - sales
-    - hsbc
     - platform-repo-managed
-  - id: 61beda28-88aa-5d73-af7c-b78d6a386e9d
+  - id: 8c793911-a9fc-5b3e-b3b0-3fcc98c8cd40
     methods:
     - GET
-    name: bookings-service_get-health
+    name: bookings-service-fca_get-health
     paths:
     - ~/health$
     plugins: []
@@ -225,11 +218,9 @@ services:
     strip_path: false
     tags:
     - sales
-    - hsbc
     - platform-repo-managed
   tags:
   - sales
-  - hsbc
   - platform-repo-managed
 - host: customer.kongair
   id: 690e812e-2873-566a-b02f-d03e0bf8ff69

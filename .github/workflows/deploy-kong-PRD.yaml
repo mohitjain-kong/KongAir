@@ -7,6 +7,10 @@ on:
     paths:
       - PRD/kong/kong.yaml
       - .github/workflows/deploy-kong-PRD.yaml
+      - flight-data/flights/openapi.yaml
+      - flight-data/routes/openapi.yaml
+      - sales/bookings/openapi.yaml
+      - sales/customer/openapi.yaml
   workflow_dispatch:
 
 jobs:
