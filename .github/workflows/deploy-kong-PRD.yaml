@@ -68,9 +68,8 @@ jobs:
             VERSION=$(yq '.info.version' "$SPEC_FILE")
 
             # Get or create API product
-            ENCODED_NAME=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$PRODUCT_NAME'))")
-            PRODUCT_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v2/api-products?filter[name]=$ENCODED_NAME" \
-              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r '.data[0].id // empty')
+            PRODUCT_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v2/api-products" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r --arg name "$PRODUCT_NAME" '.data[] | select(.name == $name) | .id // empty' | head -1)
 
             if [ -z "$PRODUCT_ID" ]; then
               PRODUCT_ID=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v2/api-products" \
