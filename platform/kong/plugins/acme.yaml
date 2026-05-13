@@ -22,3 +22,7 @@ plugins:
     domains:
       - "api.kong-air.com"
     storage: "redis"
+    storage_config:
+      redis:
+        host: "{vault://env/acme/redis_host}"
+        port: 6379
