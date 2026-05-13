@@ -110,14 +110,14 @@ jobs:
           deck file openapi2kong -s flight-data/flights/openapi.yaml | \
             deck file patch flight-data/flights/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-flights-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data1
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data
 
       - name: Convert Routes API to Kong
         run: |
           deck file openapi2kong -s flight-data/routes/openapi.yaml | \
             deck file patch flight-data/routes/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-routes-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" route-data
 
       - name: Convert Bookings API to Kong
         run: |
