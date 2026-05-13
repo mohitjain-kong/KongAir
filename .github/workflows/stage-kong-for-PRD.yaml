@@ -24,6 +24,7 @@ jobs:
   stage-kong-for-prd:
     name: Stage Kong changes for PRD
     runs-on: ubuntu-latest
+    environment: prd
 
     steps:
       - name: Checkout
