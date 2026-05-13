@@ -113,5 +113,11 @@ jobs:
                 -H "Content-Type: application/json" \
                 -d "{\"name\": \"oas.yaml\", \"content\": \"$SPEC_CONTENT\"}" > /dev/null
             fi
-            echo "Published spec for $PRODUCT_NAME v$VERSION"
+            # Publish product version to Dev Portal
+            curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/portals/${{ vars.KONNECT_PORTAL_ID }}/product-versions" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"product_version_id\": \"$VERSION_ID\"}" > /dev/null
+
+            echo "Published spec for $PRODUCT_NAME v$VERSION to Dev Portal"
           done
