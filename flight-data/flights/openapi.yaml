@@ -4,7 +4,7 @@ openapi: 3.0.0
 
 info:
   description: KongAir Flights service provides the scheduled flights for KongAir
-  version: 1.1.1
+  version: 1.0.0
   title: Flights Service
   contact:
     name: Kong, Inc.
