@@ -155,18 +155,18 @@ jobs:
             fi
 
             # Upload spec version (always create new — Catalog keeps version history)
-            UPLOAD_RESULT=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
+            UPLOAD_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
               -H "Content-Type: application/json" \
               -d "{\"spec\": {\"content\": $SPEC_CONTENT}}")
-            echo "Spec upload result for $API_NAME: $(echo $UPLOAD_RESULT | jq '{id, created_at, status, title}')"
+            echo "Spec upload for $API_NAME: $(echo "$UPLOAD_RESULT" | tail -1) | body: $(echo "$UPLOAD_RESULT" | head -1)"
 
             # Publish to v3 portal
-            PUBLISH_RESULT=$(curl -s -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
+            PUBLISH_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
               -H "Content-Type: application/json" \
               -d '{"visibility": "public"}')
-            echo "Publish result for $API_NAME: $(echo $PUBLISH_RESULT | jq '{status, title, visibility}')"
+            echo "Publish for $API_NAME: $(echo "$PUBLISH_RESULT" | tail -1) | body: $(echo "$PUBLISH_RESULT" | head -1)"
 
             echo "Published $API_NAME v$VERSION to Konnect Catalog and FCA Demo portal"
           done
