@@ -6,7 +6,6 @@ on:
       - main
       - workflow/**
       - contract-test
-      - feature/**
     paths-ignore:
       - 'PRD/**'
       - 'platform/kong/.generated/kong.yaml'
