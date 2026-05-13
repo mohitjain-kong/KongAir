@@ -154,12 +154,24 @@ jobs:
               echo "Found existing catalog API: $API_NAME ($API_ID)"
             fi
 
-            # Upload spec version (always create new — Catalog keeps version history)
-            UPLOAD_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
-              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
-              -H "Content-Type: application/json" \
-              -d "{\"spec\": {\"content\": $SPEC_CONTENT}}")
-            echo "Spec upload for $API_NAME: $(echo "$UPLOAD_RESULT" | tail -1) | body: $(echo "$UPLOAD_RESULT" | head -1)"
+            # Find existing version or create new
+            EXISTING_VERSIONS=$(curl -s "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}")
+            VERSION_ID=$(echo "$EXISTING_VERSIONS" | jq -r --arg v "$VERSION" '.data[] | select(.version == $v) | .id // empty' | head -1)
+
+            if [ -z "$VERSION_ID" ]; then
+              UPLOAD_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"spec\": {\"content\": $SPEC_CONTENT}}")
+              echo "Spec created for $API_NAME: $(echo "$UPLOAD_RESULT" | tail -1)"
+            else
+              UPLOAD_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X PATCH "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions/$VERSION_ID" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"spec\": {\"content\": $SPEC_CONTENT}}")
+              echo "Spec updated for $API_NAME ($VERSION_ID): $(echo "$UPLOAD_RESULT" | tail -1)"
+            fi
 
             # Publish to v3 portal
             PUBLISH_RESULT=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X PUT "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/publications/${{ vars.KONNECT_PORTAL_ID_V3 }}" \
