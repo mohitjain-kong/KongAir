@@ -53,3 +53,65 @@ jobs:
                --konnect-token ${{ secrets.KONNECT_PAT }} \
                --konnect-addr "${{ vars.KONNECT_ADDR }}" \
                PRD/kong/kong.yaml
+
+      - name: Publish API specs to Konnect Dev Portal
+        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
+        run: |
+          for app in \
+            "KongAir Flights:flight-data/flights/openapi.yaml" \
+            "KongAir Routes:flight-data/routes/openapi.yaml" \
+            "KongAir Bookings:sales/bookings/openapi.yaml" \
+            "KongAir Customer:sales/customer/openapi.yaml"; do
+
+            PRODUCT_NAME="${app%%:*}"
+            SPEC_FILE="${app##*:}"
+            VERSION=$(yq '.info.version' "$SPEC_FILE")
+
+            # Get or create API product
+            PRODUCT_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v2/api-products?filter[name]=$PRODUCT_NAME" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r '.data[0].id // empty')
+
+            if [ -z "$PRODUCT_ID" ]; then
+              PRODUCT_ID=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v2/api-products" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"$PRODUCT_NAME\", \"description\": \"Managed by APIOps pipeline\"}" \
+                | jq -r '.id')
+              echo "Created API product: $PRODUCT_NAME ($PRODUCT_ID)"
+            else
+              echo "Found existing API product: $PRODUCT_NAME ($PRODUCT_ID)"
+            fi
+
+            # Get or create product version
+            VERSION_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID/product-versions?filter[name]=$VERSION" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r '.data[0].id // empty')
+
+            if [ -z "$VERSION_ID" ]; then
+              VERSION_ID=$(curl -s -X POST "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID/product-versions" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"$VERSION\", \"publish_status\": \"published\"}" \
+                | jq -r '.id')
+              echo "Created version $VERSION for $PRODUCT_NAME ($VERSION_ID)"
+            else
+              echo "Found existing version $VERSION for $PRODUCT_NAME ($VERSION_ID)"
+            fi
+
+            # Upload or update spec
+            SPEC_CONTENT=$(base64 -w 0 "$SPEC_FILE")
+            SPEC_ID=$(curl -s "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID/product-versions/$VERSION_ID/specifications" \
+              -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" | jq -r '.data[0].id // empty')
+
+            if [ -z "$SPEC_ID" ]; then
+              curl -s -X POST "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID/product-versions/$VERSION_ID/specifications" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"oas.yaml\", \"content\": \"$SPEC_CONTENT\"}" > /dev/null
+            else
+              curl -s -X PATCH "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID/product-versions/$VERSION_ID/specifications/$SPEC_ID" \
+                -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
+                -H "Content-Type: application/json" \
+                -d "{\"name\": \"oas.yaml\", \"content\": \"$SPEC_CONTENT\"}" > /dev/null
+            fi
+            echo "Published spec for $PRODUCT_NAME v$VERSION"
+          done
