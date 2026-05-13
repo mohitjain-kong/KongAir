@@ -44,16 +44,3 @@ jobs:
                --konnect-token ${{ secrets.KONNECT_PAT }} \
                --konnect-addr "${{ vars.KONNECT_ADDR }}" \
                PRD/kong/kong.yaml
-
-      - name: deck sync Kong EE
-        if: vars.DEPLOY_TARGET == 'EE'
-        run: |
-            deck gateway sync --select-tag platform-repo-managed \
-                --kong-addr "${{ vars.KONG_EE_ADMIN_API }}" \
-                PRD/kong/kong.yaml
-
-      - name: deck sync Kong Ingress Controller
-        if: vars.DEPLOY_TARGET == 'KIC'
-        run: |
-            deck file kong2kic --select-tag platform-repo-managed \
-                -s PRD/kong/kong.yaml | kubectl apply -f -
