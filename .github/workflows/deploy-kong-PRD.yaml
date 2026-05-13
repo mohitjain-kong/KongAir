@@ -36,6 +36,15 @@ jobs:
           deck-version: '1.58.0'
           wrapper: false
 
+      - name: deck validate konnect
+        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
+        run: |
+           deck gateway validate \
+               --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
+               --konnect-token ${{ secrets.KONNECT_PAT }} \
+               --konnect-addr "${{ vars.KONNECT_ADDR }}" \
+               PRD/kong/kong.yaml
+
       - name: deck sync konnect
         if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
         run: |

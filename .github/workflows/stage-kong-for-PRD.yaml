@@ -39,6 +39,14 @@ jobs:
       - name: stage combined file for PRD
         run: cp platform/kong/.generated/kong.yaml PRD/kong/kong.yaml
 
+      - name: deck validate
+        run: |
+          deck gateway validate \
+            --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
+            --konnect-token ${{ secrets.KONNECT_PAT }} \
+            --konnect-addr "${{ vars.KONNECT_ADDR }}" \
+            PRD/kong/kong.yaml
+
       - name: deck diff
         id: deck-diff
         # deck diff results in a multi-line output, which requires some
