@@ -55,5 +55,6 @@ jobs:
         with:
           title: "❗PRD❗: Staged changes for Kong Gateway PRD deployment"
           branch: "PRD/kong"
+          base: main
           labels: "PRD,kong"
           body: "Merging this PR will result in the following changes deployed to PRD \n\n ```\n${{env.DIFF}}\n```"
