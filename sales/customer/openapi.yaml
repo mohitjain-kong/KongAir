@@ -7,7 +7,7 @@ info:
     KongAir Customer Information service provides customer information
     (payment methods, contact info, frequent flyer, etc...)
   version: 0.1.0
-  title: Customer Information Service
+  title: Customer Information Service FCA
 
 servers:
 - url: http://localhost:8083
