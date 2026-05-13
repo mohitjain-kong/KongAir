@@ -8,3 +8,5 @@ kong.yaml
 *.pid
 .hypothesis/
 flight-data/flights/openapi1.yaml
+delete-products.sh
+test-catalog.sh
