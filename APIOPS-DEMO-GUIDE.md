@@ -27,30 +27,34 @@ Additional layers:
 
 ---
 
-## The Pipeline — 3 GitHub Actions Workflows
+## The Pipeline — 2 GitHub Actions Workflows
 
-### Workflow 1: `stage-changes-for-kong.yaml`
+### Workflow 1: `ci-kong.yaml`
 
-**Trigger:** Push to `main` (or `workflow/**`) when OAS or Kong config files change (excludes `PRD/`)
+**Trigger:** Push to `workflow/**` when OAS or Kong config files change
 
-**Purpose:** Convert developer changes into Kong gateway configuration and open a staging PR for review.
+**Purpose:** Convert OAS to Kong config, validate and diff against Konnect, commit `PRD/kong/kong.yaml` back to the workflow branch, and open a PR to `main` with the gateway diff in the PR body for review.
 
 ```
 Developer edits openapi.yaml or patches.yaml
               ↓
-         Push to main
+    Push to workflow/fca-demo
               ↓
      [has-changes] job
   dorny/paths-filter checks if
   relevant files actually changed
               ↓
-      [oas-break] job
-  oasdiff checks for breaking
-  API changes → GitHub Issue if found
-              ↓
-     [oas-to-kong] job
+  [build-validate-stage] job (environment: prd)
   Convert → Patch → Tag → Merge → Lint
-  Opens PR: "Stage Kong Gateway Configuration"
+              ↓
+  deck gateway validate  ← catches incompatible config early
+              ↓
+  deck gateway diff      ← captures what will change in Konnect
+              ↓
+  Commits PRD/kong/kong.yaml to workflow branch [skip ci]
+              ↓
+  Opens/updates PR: workflow/fca-demo → main
+  (gateway diff shown in PR body for reviewer)
 ```
 
 **deck commands:**
@@ -88,52 +92,20 @@ deck file merge \
   platform/kong/vaults/* | \
 deck file patch platform/kong/patches.yaml | \
 deck file add-tags \
-  -o platform/kong/.generated/kong.yaml \
+  -o PRD/kong/kong.yaml \
   "platform-repo-managed"
 
 # Lint the final merged config
-deck file lint -s platform/kong/.generated/kong.yaml platform/kong/lint-rulesets.yaml
-```
+deck file lint -s PRD/kong/kong.yaml platform/kong/lint-rulesets.yaml
 
-**Output:** PR opened with updated `platform/kong/.generated/kong.yaml`
-
----
-
-### Workflow 2: `stage-kong-for-PRD.yaml`
-
-**Trigger:** Push to `main` when `platform/kong/.generated/kong.yaml` changes (i.e., after Workflow 1's PR merges)
-
-**Purpose:** Validate config against Konnect and show a diff of what will change — gives platform team a gate before production.
-
-```
-Staging PR merged to main
-              ↓
-   [stage-for-prd] job (environment: prd)
-              ↓
-   Copy generated config to PRD/kong/kong.yaml
-              ↓
-   deck gateway validate  ← catches incompatible config BEFORE diff
-              ↓
-   deck gateway diff      ← shows exactly what will change in Konnect
-              ↓
-   Opens PR: "Stage Kong Gateway Configuration for PRD"
-   (targets main, includes diff output for review)
-```
-
-**deck commands:**
-
-```bash
-# Copy generated config to PRD folder
-cp platform/kong/.generated/kong.yaml PRD/kong/kong.yaml
-
-# Validate config is compatible with Konnect (catches issues early)
+# Validate config is compatible with Konnect (online check)
 deck gateway validate \
   --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
   --konnect-token ${{ secrets.KONNECT_PAT }} \
   --konnect-addr "${{ vars.KONNECT_ADDR }}" \
   PRD/kong/kong.yaml
 
-# Show what will change in Konnect (dry run — no changes applied)
+# Diff against Konnect — output captured into PR body
 deck gateway diff --select-tag platform-repo-managed \
   --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
   --konnect-token ${{ secrets.KONNECT_PAT }} \
@@ -141,22 +113,23 @@ deck gateway diff --select-tag platform-repo-managed \
   PRD/kong/kong.yaml
 ```
 
-**Output:** PR opened with `PRD/kong/kong.yaml` — ops/platform team reviews the diff and approves
+**Output:**
+- `PRD/kong/kong.yaml` committed back to `workflow/fca-demo` with `[skip ci]`
+- PR opened from `workflow/fca-demo` → `main` with the full gateway diff in the body
+- Workflow branch always holds the latest generated state file
 
 ---
 
-### Workflow 3: `deploy-kong-PRD.yaml`
+### Workflow 2: `deploy-kong-PRD.yaml`
 
-**Trigger:** Push to `main` when `PRD/kong/kong.yaml` changes (i.e., after Workflow 2's PRD PR merges)
+**Trigger:** Push to `main` when `PRD/kong/kong.yaml` or any `openapi.yaml` changes (i.e., after Workflow 1's PR merges)
 
 **Purpose:** Apply changes to Konnect and publish API specs to both the Dev Portal and the Konnect Catalog.
 
 ```
-PRD PR merged to main
+PR merged to main (workflow/fca-demo → main)
               ↓
    [deploy-kong] job (environment: prd)
-              ↓
-   deck gateway validate  ← final safety check
               ↓
    deck gateway sync      ← applies changes to Konnect
               ↓
@@ -168,13 +141,6 @@ PRD PR merged to main
 **deck commands:**
 
 ```bash
-# Validate again before touching production
-deck gateway validate \
-  --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
-  --konnect-token ${{ secrets.KONNECT_PAT }} \
-  --konnect-addr "${{ vars.KONNECT_ADDR }}" \
-  PRD/kong/kong.yaml
-
 # Sync ONLY resources tagged platform-repo-managed (selective sync — safe)
 deck gateway sync --select-tag platform-repo-managed \
   --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
@@ -190,28 +156,25 @@ deck gateway sync --select-tag platform-repo-managed \
 ```
 Developer edits openapi.yaml or patches.yaml
               ↓
-         Push to main
+    Push to workflow/fca-demo
               ↓
-  ┌─── Workflow 1: stage-changes-for-kong ───┐
-  │  • Breaking change detection (oasdiff)   │
-  │  • openapi2kong conversion               │
-  │  • patch → add-tags → merge → lint       │
-  │  • PR opened for staging review          │
-  └──────────────────────────────────────────┘
-              ↓ (PR merged)
-  ┌─── Workflow 2: stage-kong-for-PRD ───────┐
-  │  • deck validate (catches bad config)    │
-  │  • deck diff (shows Konnect delta)       │
-  │  • PRD PR opened for ops review          │
-  └──────────────────────────────────────────┘
-              ↓ (PRD PR merged)
-  ┌─── Workflow 3: deploy-kong-PRD ──────────┐
-  │  • deck validate (final safety net)      │
-  │  • deck sync (pushes to Konnect)         │
-  │  • Publish to Dev Portal (v2)            │
-  │  • Publish to Konnect Catalog (v3)       │
-  └──────────────────────────────────────────┘
+  ┌─── Workflow 1: ci-kong.yaml ──────────────────────┐
+  │  • openapi2kong conversion                        │
+  │  • patch → add-tags → merge → lint                │
+  │  • deck validate (catches bad config)             │
+  │  • deck diff (captures Konnect delta)             │
+  │  • Commits PRD/kong/kong.yaml [skip ci]           │
+  │  • Opens PR to main with diff in body             │
+  └───────────────────────────────────────────────────┘
+              ↓ (reviewer sees diff in PR, approves and merges)
+  ┌─── Workflow 2: deploy-kong-PRD.yaml ──────────────┐
+  │  • deck sync (pushes to Konnect)                  │
+  │  • Publish to Dev Portal (v2)                     │
+  │  • Publish to Konnect Catalog (v3)                │
+  └───────────────────────────────────────────────────┘
 ```
+
+> **Key design decision:** `workflow/fca-demo` is the working branch. All changes — source OAS, patches, and the generated `PRD/kong/kong.yaml` — live here. The PR from this branch to `main` is the production gate. `main` always reflects what is deployed.
 
 ---
 
@@ -313,7 +276,6 @@ PUT  /v3/apis/{id}/publications/{PORTAL_ID_V3}
 | `KONNECT_CP_NAME` | var | `FCA Control Plane` | Control plane name (quote if spaces) |
 | `KONNECT_PORTAL_ID` | var | `c35e4220-...` | v2 classic Dev Portal ID |
 | `KONNECT_PORTAL_ID_V3` | var | `30ab00aa-...` | v3 Catalog portal ID |
-| `DEPLOY_TARGET` | var | `KONNECT` | Deployment target (blank defaults to Konnect) |
 | `KONNECT_PAT` | **secret** | `kpat_...` | Personal Access Token |
 
 ---
@@ -335,9 +297,13 @@ PUT  /v3/apis/{id}/publications/{PORTAL_ID_V3}
 
 Konnect may have resources created manually (via UI or Admin API). Using `--select-tag` ensures deck **only manages resources it owns** — it will not delete or overwrite anything that wasn't created by this pipeline.
 
-### Why `validate` before `diff` and before `sync`?
+### Why `validate` before `diff`?
 
-`deck gateway diff` and `sync` will fail if the config contains Konnect-incompatible settings (e.g. `storage: kong` on the ACME plugin — only `redis` is supported on Konnect). Running `validate` first gives a clear error message early, before wasting time on a sync attempt.
+`deck gateway diff` will fail if the config contains Konnect-incompatible settings (e.g. `storage: kong` on the ACME plugin — only `redis` is supported on Konnect). Running `validate` first gives a clear error message early, before wasting time on a diff or sync attempt.
+
+### Why `[skip ci]` on the generated commit?
+
+The CI workflow commits `PRD/kong/kong.yaml` back to the `workflow/fca-demo` branch. Without `[skip ci]`, this push would trigger the CI again — causing an infinite loop. The `[skip ci]` tag in the commit message tells GitHub Actions to skip the workflow for that specific push.
 
 ---
 
@@ -348,20 +314,20 @@ Konnect may have resources created manually (via UI or Admin API). Using `--sele
 | `upload-artifact@v3` deprecated | Action version outdated | Updated to `v4` |
 | `env.KONNECT_CP_NAME` resolving empty | GitHub Env vars require `vars.` context, not `env.` | Changed all references to `vars.KONNECT_CP_NAME` |
 | "FCA Control Plane" breaking CLI args | Spaces in CP name not quoted | Quoted `"${{ vars.KONNECT_CP_NAME }}"` in all deck commands |
-| Both Workflow 1 and 2 firing simultaneously | Workflow 2 had no path filter — fired on every push to main | Added `paths: platform/kong/.generated/kong.yaml` to Workflow 2 |
-| PRD PR targeting wrong branch | `create-pull-request` defaulted to current branch as base | Added `base: main` to the create-pull-request step |
-| `deck gateway validate` missing | Validate step not in pipeline | Added before `deck diff` (Workflow 2) and before `deck sync` (Workflow 3) |
+| Both old workflows firing simultaneously | Workflow 2 had no path filter — fired on every push to main | Resolved by consolidating to single CI workflow on `workflow/**` only |
+| `deck gateway validate` missing | Validate step not in pipeline | Added before `deck diff` in CI workflow |
 | ACME `storage: kong` invalid on Konnect | Konnect does not support local Kong storage | Changed to `storage: redis` with `storage_config.redis` config |
 | Duplicate API products on each pipeline run | URL filter (`filter[name]=KongAir Flights`) fails with spaces | Fixed with client-side jq: `select(.name == $name)` |
 | Wrong portal ID for v3 Catalog | v2 portal ID used in v3 publication call | Introduced `KONNECT_PORTAL_ID_V3` variable for v3 catalog portal |
 | Catalog spec not updating — `409 Conflict` on every run | `POST /v3/apis/{id}/versions` fails if version string already exists; also used `.name` field which doesn't exist (correct field is `.version`) | Upsert logic: `GET` versions → `select(.version == $v)` → `PATCH` if exists, `POST` if not |
-| OAS `info.title` changes not triggering portal republish | `deploy-kong-PRD.yaml` only watched `PRD/kong/kong.yaml` — title changes don't alter gateway config so no pipeline ran | Added all `openapi.yaml` paths to Workflow 3 trigger paths |
+| OAS `info.title` changes not triggering portal republish | Deploy workflow only watched `PRD/kong/kong.yaml` — title changes don't alter gateway config so pipeline never ran | Added all `openapi.yaml` paths to deploy workflow trigger paths |
+| 3-workflow pipeline was complex and confusing | Intermediate staging PRs created extra steps with no clear owner | Consolidated to 2 workflows: CI on `workflow/**` + deploy on `main` |
 
 ---
 
 ## Demo Narrative
 
-> "A developer changes an OpenAPI spec — maybe a new endpoint, a changed parameter. That single Git push triggers automated breaking-change detection, Kong config generation, linting, and a staging PR. A platform engineer reviews the `deck diff` output showing exactly what will change in the gateway — no surprises, no manual config. On approval, the config syncs to Konnect. Simultaneously, the updated API specs are published to the **Dev Portal** for external consumers to discover and subscribe, and to the **Konnect Catalog** for internal governance — all from a single Git merge, zero manual steps."
+> "A developer changes an OpenAPI spec — maybe a new endpoint, a changed parameter. That single push to the workflow branch triggers Kong config generation, linting, validation against Konnect, and a diff of exactly what will change in the gateway. The diff is embedded directly in the PR body — the approver can review the precise gateway delta before merging. On approval, the config syncs to Konnect. Simultaneously, the updated API specs are published to the **Dev Portal** for external consumers to discover and subscribe, and to the **Konnect Catalog** for internal governance — all from a single Git merge, zero manual steps."
 
 ---
 

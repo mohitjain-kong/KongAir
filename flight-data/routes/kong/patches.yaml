@@ -2,7 +2,7 @@ _format_version: "1.0"
 
 patches:
   - selectors:
-    - $.services[?(@.name=="routes-service")]
+    - $.services[?(@.name=="routes-service-fca")]
     values:
       host: routes.kongair
       port: 8081
