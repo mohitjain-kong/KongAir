@@ -169,17 +169,31 @@ jobs:
           name: kong-configurations
           path: .github/artifacts/kong/*.yaml
 
-      - name: Open PRD PR with diff
-        uses: peter-evans/create-pull-request@v5
-        with:
-          title: "❗PRD❗: Deploy Kong Gateway changes to production"
-          branch: "PRD/kong"
-          base: main
-          labels: "PRD,kong"
-          body: |
-            Merging this PR will apply the following changes to the Kong Gateway in PRD and republish API specs to Dev Portal and Konnect Catalog.
+      - name: Commit PRD/kong/kong.yaml back to workflow branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add PRD/kong/kong.yaml
+          git diff --cached --quiet || git commit -m "chore: update PRD/kong/kong.yaml [skip ci]"
+          git push origin HEAD:${{ github.ref_name }}
 
-            **Gateway diff:**
-            ```
-            ${{ env.DIFF }}
-            ```
+      - name: Open or update PR to main with diff
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --base main --json number -q '.[0].number')
+          BODY="$(printf 'Merging this PR will apply the following changes to the Kong Gateway in PRD and republish API specs to Dev Portal and Konnect Catalog.\n\n**Gateway diff:**\n```\n%s\n```' "$DIFF")"
+
+          if [ -z "$PR_NUMBER" ]; then
+            gh pr create \
+              --title "❗PRD❗: Deploy Kong Gateway changes to production" \
+              --base main \
+              --head "$BRANCH" \
+              --label "PRD,kong" \
+              --body "$BODY"
+          else
+            gh pr edit "$PR_NUMBER" --body "$BODY"
+            echo "Updated existing PR #$PR_NUMBER"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIFF: ${{ env.DIFF }}
