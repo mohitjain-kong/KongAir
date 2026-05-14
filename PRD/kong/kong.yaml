@@ -192,7 +192,7 @@ services:
     - GET
     name: bookings-service-fca_get-bookings
     paths:
-    - ~/bookings$
+    - ~/bookingsmohit$
     plugins: []
     protocols:
     - https
@@ -206,7 +206,7 @@ services:
     - POST
     name: bookings-service-fca_post-booking
     paths:
-    - ~/bookings$
+    - ~/bookingsmohit$
     plugins: []
     protocols:
     - https
