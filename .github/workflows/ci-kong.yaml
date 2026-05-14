@@ -1,48 +1,39 @@
-name: Stage changes for Kong
+name: CI — Build, Validate and Stage Kong for PRD
 
 on:
   push:
     branches:
-      - main
       - workflow/**
-      - contract-test
-    paths-ignore:
-      - 'PRD/**'
-      - 'platform/kong/.generated/kong.yaml'
   workflow_dispatch:
 
 jobs:
 
   has-changes:
-    name: Have specs, configurations, or pipeline files changed
+    name: Check for relevant changes
     runs-on: ubuntu-latest
-
     outputs:
       are-changes: ${{ steps.changed-files.outputs.files }}
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changed-files
         with:
           filters: |
             files:
-              - '.github/workflows/stage-changes-for-kong.yaml'
+              - '.github/workflows/ci-kong.yaml'
               - 'flight-data/flights/openapi.yaml'
               - 'flight-data/flights/kong/**'
               - 'flight-data/routes/openapi.yaml'
               - 'flight-data/routes/kong/**'
-              - 'sales/bookings/opeanapi.yaml'
+              - 'sales/bookings/openapi.yaml'
               - 'sales/bookings/kong/**'
-              - 'sales/customer/opeanapi.yaml'
+              - 'sales/customer/openapi.yaml'
               - 'sales/customer/kong/**'
               - 'experience/kong/**'
               - 'platform/kong/**'
 
   oas-break:
-    name: Check breaking changes
+    name: Check for breaking OAS changes
     needs: has-changes
     if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
     runs-on: ubuntu-latest
@@ -51,34 +42,27 @@ jobs:
         app:
           - dir: flight-data
             name: flights
-            port: 8080
           - dir: flight-data
             name: routes
-            port: 8081
           - dir: sales
             name: bookings
-            port: 8082
           - dir: sales
             name: customer
-            port: 8083
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: Base OAS
         run: |
-          git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-          echo "Base OAS path: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml"
-          cat ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
-      - name: Check OAS breaking changes
+          git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > base.yaml \
+            || cp ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml base.yaml
+      - name: Check breaking changes
         uses: oasdiff/oasdiff-action/breaking@main
         id: oasdiff
         with:
-          base: ${{ matrix.app.dir }}/${{ matrix.app.name }}/base.yaml
+          base: base.yaml
           revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
-      - name: Create Issue on Breaking Change
+      - name: Create Issue on breaking change
         if: steps.oasdiff.outputs.breaking != 'No breaking changes'
         uses: JasonEtco/create-an-issue@v2
         env:
@@ -88,19 +72,17 @@ jobs:
         with:
           filename: .github/ISSUE_TEMPLATE/breaking-change.md
 
-  oas-to-kong:
-    name: Convert OAS to Kong configurations
+  build-validate-stage:
+    name: Build → Validate → Diff → Open PRD PR
     needs: [has-changes, oas-break]
     if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
     runs-on: ubuntu-latest
-    outputs:
-      pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
+    environment: prd
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup deck
-        uses: kong/setup-deck@v1
+      - uses: actions/checkout@v3
+
+      - uses: kong/setup-deck@v1
         with:
           deck-version: '1.58.0'
           wrapper: false
@@ -110,7 +92,7 @@ jobs:
           deck file openapi2kong -s flight-data/flights/openapi.yaml | \
             deck file patch flight-data/flights/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-flights-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data1
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data
 
       - name: Convert Routes API to Kong
         run: |
@@ -122,54 +104,82 @@ jobs:
       - name: Convert Bookings API to Kong
         run: |
           deck file openapi2kong -s sales/bookings/openapi.yaml | \
-            deck file patch  sales/bookings/kong/patches.yaml | \
+            deck file patch sales/bookings/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/sales-bookings-kong.yaml \
               --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
 
-      - name: Convert Customers API to Kong
+      - name: Convert Customer API to Kong
         run: |
           deck file openapi2kong -s sales/customer/openapi.yaml | \
             deck file patch sales/customer/kong/patches.yaml | \
-            deck file add-tags -o .github/artifacts/kong/sales-customer-kong.yaml --selector "$.services[*]" \
-              --selector "$.services[*].routes[*]" sales
+            deck file add-tags -o .github/artifacts/kong/sales-customer-kong.yaml \
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
 
-      - name: Combine Kong Configurations
+      - name: Merge all Kong configurations
         run: |
           deck file merge \
-            .github/artifacts/kong/*-kong.yaml -o .github/artifacts/kong/kong-combined.yaml
-
-      - name: Merge Experience API Configurations
-        run: |
-          deck file merge \
-            .github/artifacts/kong/kong-combined.yaml experience/kong/experience-service.yaml \
+            .github/artifacts/kong/*-kong.yaml \
             -o .github/artifacts/kong/kong-combined.yaml
 
-      - name: Platform Team Kong Additions
+      - name: Merge Experience layer
         run: |
           deck file merge \
             .github/artifacts/kong/kong-combined.yaml \
-            platform/kong/platform-kong-base.yaml     \
-            platform/kong/consumers/*                 \
-            platform/kong/plugins/*                   \
-            platform/kong/vaults/* |                  \
-          deck file patch \
-            platform/kong/patches.yaml |
+            experience/kong/experience-service.yaml \
+            -o .github/artifacts/kong/kong-combined.yaml
+
+      - name: Platform additions, patches and tag
+        run: |
+          deck file merge \
+            .github/artifacts/kong/kong-combined.yaml \
+            platform/kong/platform-kong-base.yaml \
+            platform/kong/consumers/* \
+            platform/kong/plugins/* \
+            platform/kong/vaults/* | \
+          deck file patch platform/kong/patches.yaml | \
           deck file add-tags \
-            -o platform/kong/.generated/kong.yaml \
+            -o PRD/kong/kong.yaml \
             "platform-repo-managed"
 
-      - name: Kong linting
-        run: deck file lint -s platform/kong/.generated/kong.yaml platform/kong/lint-rulesets.yaml
+      - name: Lint
+        run: deck file lint -s PRD/kong/kong.yaml platform/kong/lint-rulesets.yaml
 
-      - name: Upload Artifacts
+      - name: Validate against Konnect
+        run: |
+          deck gateway validate \
+            --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
+            --konnect-token ${{ secrets.KONNECT_PAT }} \
+            --konnect-addr "${{ vars.KONNECT_ADDR }}" \
+            PRD/kong/kong.yaml
+
+      - name: Diff against Konnect
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "DIFF<<$EOF" >> $GITHUB_ENV
+          deck gateway diff --select-tag platform-repo-managed \
+            --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
+            --konnect-token ${{ secrets.KONNECT_PAT }} \
+            --konnect-addr "${{ vars.KONNECT_ADDR }}" \
+            PRD/kong/kong.yaml >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kong-configurations
           path: .github/artifacts/kong/*.yaml
 
-      - name: Create PR for changed Kong Gateway Configuration
-        id: create_pr
+      - name: Open PRD PR with diff
         uses: peter-evans/create-pull-request@v5
         with:
-          title: Stage Kong Gateway Configuration
+          title: "❗PRD❗: Deploy Kong Gateway changes to production"
+          branch: "PRD/kong"
+          base: main
+          labels: "PRD,kong"
+          body: |
+            Merging this PR will apply the following changes to the Kong Gateway in PRD and republish API specs to Dev Portal and Konnect Catalog.
 
+            **Gateway diff:**
+            ```
+            ${{ env.DIFF }}
+            ```

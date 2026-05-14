@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - PRD/kong/kong.yaml
-      - .github/workflows/deploy-kong-PRD.yaml
       - flight-data/flights/openapi.yaml
       - flight-data/routes/openapi.yaml
       - sales/bookings/openapi.yaml
@@ -14,16 +13,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
-#  this job is useful to debug workflows, see https://github.com/mheap/debug-artifact
-#  debug-artifacts:
-#    name: Upload Debug Artifacts
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Upload Debug Artifacts
-#        uses: mheap/debug-artifact@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-kong:
     name: Deploy Kong to PRD
@@ -40,26 +29,15 @@ jobs:
           deck-version: '1.58.0'
           wrapper: false
 
-      - name: deck validate konnect
-        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
-        run: |
-           deck gateway validate \
-               --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
-               --konnect-token ${{ secrets.KONNECT_PAT }} \
-               --konnect-addr "${{ vars.KONNECT_ADDR }}" \
-               PRD/kong/kong.yaml
-
       - name: deck sync konnect
-        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
         run: |
-           deck gateway sync --select-tag platform-repo-managed \
-               --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
-               --konnect-token ${{ secrets.KONNECT_PAT }} \
-               --konnect-addr "${{ vars.KONNECT_ADDR }}" \
-               PRD/kong/kong.yaml
+          deck gateway sync --select-tag platform-repo-managed \
+            --konnect-control-plane-name "${{ vars.KONNECT_CP_NAME }}" \
+            --konnect-token ${{ secrets.KONNECT_PAT }} \
+            --konnect-addr "${{ vars.KONNECT_ADDR }}" \
+            PRD/kong/kong.yaml
 
       - name: Publish API specs to Konnect Dev Portal
-        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
         run: |
           for app in \
             "KongAir Flights:flight-data/flights/openapi.yaml" \
@@ -83,7 +61,6 @@ jobs:
                 | jq -r '.id')
               echo "Created API product: $PRODUCT_NAME ($PRODUCT_ID)"
             else
-              # Ensure existing product is linked to portal
               curl -s -X PATCH "${{ vars.KONNECT_ADDR }}/v2/api-products/$PRODUCT_ID" \
                 -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
                 -H "Content-Type: application/json" \
@@ -126,7 +103,6 @@ jobs:
           done
 
       - name: Publish APIs to Konnect Catalog
-        if: vars.DEPLOY_TARGET == 'KONNECT' || vars.DEPLOY_TARGET == ''
         run: |
           for app in \
             "KongAir Flights:flight-data/flights/openapi.yaml" \
@@ -154,7 +130,7 @@ jobs:
               echo "Found existing catalog API: $API_NAME ($API_ID)"
             fi
 
-            # Find existing version or create new
+            # Find existing version or create new (upsert)
             EXISTING_VERSIONS=$(curl -s "${{ vars.KONNECT_ADDR }}/v3/apis/$API_ID/versions" \
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}")
             VERSION_ID=$(echo "$EXISTING_VERSIONS" | jq -r --arg v "$VERSION" '.data[] | select(.version == $v) | .id // empty' | head -1)
@@ -178,7 +154,7 @@ jobs:
               -H "Authorization: Bearer ${{ secrets.KONNECT_PAT }}" \
               -H "Content-Type: application/json" \
               -d '{"visibility": "public"}')
-            echo "Publish for $API_NAME: $(echo "$PUBLISH_RESULT" | tail -1) | body: $(echo "$PUBLISH_RESULT" | head -1)"
+            echo "Publish for $API_NAME: $(echo "$PUBLISH_RESULT" | tail -1)"
 
             echo "Published $API_NAME v$VERSION to Konnect Catalog and FCA Demo portal"
           done
