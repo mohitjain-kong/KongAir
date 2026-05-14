@@ -49,7 +49,7 @@ plugins:
   tags:
   - platform-repo-managed
 services:
-- host: localhost
+- host: flights.kongair
   id: 25a1afcf-4be2-5293-abe2-9346522c34bb
   name: flights-service-fca
   path: /
@@ -116,7 +116,7 @@ services:
   tags:
   - flight-data
   - platform-repo-managed
-- host: localhost
+- host: routes.kongair
   id: d6800eaa-1128-55e4-8eb9-fca81d05cf09
   name: routes-service-fca
   path: /
