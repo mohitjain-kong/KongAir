@@ -69,7 +69,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: d65a1799-11cd-5ac1-ae4e-4462676cc6c3
     methods:
@@ -83,7 +83,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: b31f3da0-d716-564c-8ac4-6bb347902e55
     methods:
@@ -97,7 +97,7 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data
+    - flight-data1
     - platform-repo-managed
   - id: 840f6f0b-403d-5a2a-96d1-5790cc3bc583
     methods:
