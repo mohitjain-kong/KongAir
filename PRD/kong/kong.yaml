@@ -42,7 +42,7 @@ plugins:
     storage_config:
       redis:
         host: '{vault://env/acme/redis_host}'
-        port: 6378
+        port: 6379
   enabled: true
   id: 85c9d396-5330-11ee-8c99-0242ac120002
   name: acme
@@ -169,11 +169,16 @@ services:
   tags:
   - route-data
   - platform-repo-managed
-- host: localhost
+- host: bookings.kongair
   id: e51d368f-0d2e-5877-8854-ce49d173f9b8
   name: bookings-service-fca
   path: /
-  plugins: []
+  plugins:
+  - _config: default-jwt
+    enabled: true
+    name: jwt
+    tags:
+    - platform-repo-managed
   port: 8082
   protocol: http
   routes:
