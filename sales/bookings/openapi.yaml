@@ -45,7 +45,7 @@ paths:
                   status:
                     type: string
                     example: "unhealthy"
-  "/bookings":
+  "/bookingsmohit":
     get:
       tags:
       - sales
