@@ -7,7 +7,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^https$"
+        match: "^http$"
   route-https-check:
     description: "Ensure https usage in Kong GW Routes, except for acme-dummy-service"
     given: $.services[?(@.name != "acme-dummy-service")].routes[*].protocols[*]
