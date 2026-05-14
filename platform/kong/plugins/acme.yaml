@@ -25,4 +25,4 @@ plugins:
     storage_config:
       redis:
         host: "{vault://env/acme/redis_host}"
-        port: 6378
+        port: 6379
