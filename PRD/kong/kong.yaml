@@ -50,17 +50,17 @@ plugins:
   - platform-repo-managed
 services:
 - host: localhost
-  id: 63a1622a-fedb-5921-9a6d-b27f56977f35
-  name: flights-service-fca-with-portal
+  id: 25a1afcf-4be2-5293-abe2-9346522c34bb
+  name: flights-service-fca
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: e5def610-8df7-5b8c-a54c-a8dce637f724
+  - id: 30be44b4-31ed-5204-bb68-7ffdab4ec7ab
     methods:
     - GET
-    name: flights-service-fca-with-portal_get-flights
+    name: flights-service-fca_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -69,12 +69,12 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data1
+    - flight-data
     - platform-repo-managed
-  - id: d65a1799-11cd-5ac1-ae4e-4462676cc6c3
+  - id: 39053824-6782-59c5-b51e-dfc1c730c896
     methods:
     - GET
-    name: flights-service-fca-with-portal_get-flight-by-number
+    name: flights-service-fca_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -83,12 +83,12 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data1
+    - flight-data
     - platform-repo-managed
-  - id: b31f3da0-d716-564c-8ac4-6bb347902e55
+  - id: 020f4ec3-239f-50af-9cdc-18f00e161c18
     methods:
     - GET
-    name: flights-service-fca-with-portal_get-flight-details
+    name: flights-service-fca_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -97,12 +97,12 @@ services:
     regex_priority: 100
     strip_path: false
     tags:
-    - flight-data1
+    - flight-data
     - platform-repo-managed
-  - id: 840f6f0b-403d-5a2a-96d1-5790cc3bc583
+  - id: 24597839-bacb-5b36-8e64-dbd1f7d995f1
     methods:
     - GET
-    name: flights-service-fca-with-portal_get-health
+    name: flights-service-fca_get-health
     paths:
     - ~/health$
     plugins: []
@@ -111,23 +111,23 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - flight-data1
+    - flight-data
     - platform-repo-managed
   tags:
-  - flight-data1
+  - flight-data
   - platform-repo-managed
 - host: localhost
-  id: 6c25b41b-e80f-5049-9311-b46466e48257
-  name: routes-service-with-fca
+  id: d6800eaa-1128-55e4-8eb9-fca81d05cf09
+  name: routes-service-fca
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 3dd9fb66-1a64-534c-bcf1-2154da2ceed3
+  - id: 1dee157c-d5bc-505e-a900-f5827feb584b
     methods:
     - GET
-    name: routes-service-with-fca_get-health
+    name: routes-service-fca_get-health
     paths:
     - ~/health$
     plugins: []
@@ -138,10 +138,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: cc24cf62-98ef-5d84-880d-6913f6513ef3
+  - id: 2dc41df4-a7b9-5638-8138-181f0b82162c
     methods:
     - GET
-    name: routes-service-with-fca_get-routes
+    name: routes-service-fca_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -152,10 +152,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: eda7aae5-bac3-560d-9ad1-80d2b0653567
+  - id: 737b786b-7fa9-5383-835f-a1477d54b393
     methods:
     - GET
-    name: routes-service-with-fca_get-route
+    name: routes-service-fca_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
