@@ -111,7 +111,7 @@ services:
     regex_priority: 200
     strip_path: false
     tags:
-    - route-data
+    - flight-data
     - platform-repo-managed
   tags:
   - flight-data
