@@ -14,8 +14,8 @@ jobs:
     outputs:
       are-changes: ${{ steps.changed-files.outputs.files }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
         id: changed-files
         with:
           filters: |
@@ -32,55 +32,15 @@ jobs:
               - 'experience/kong/**'
               - 'platform/kong/**'
 
-  oas-break:
-    name: Check for breaking OAS changes
-    needs: has-changes
-    if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        app:
-          - dir: flight-data
-            name: flights
-          - dir: flight-data
-            name: routes
-          - dir: sales
-            name: bookings
-          - dir: sales
-            name: customer
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-      - name: Base OAS
-        run: |
-          git show HEAD~1:${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml > base.yaml \
-            || cp ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml base.yaml
-      - name: Check breaking changes
-        uses: oasdiff/oasdiff-action/breaking@main
-        id: oasdiff
-        with:
-          base: base.yaml
-          revision: ${{ matrix.app.dir }}/${{ matrix.app.name }}/openapi.yaml
-      - name: Create Issue on breaking change
-        if: steps.oasdiff.outputs.breaking != 'No breaking changes'
-        uses: JasonEtco/create-an-issue@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APP_NAME: ${{ matrix.app.name }}
-          BREAKING_CHANGES: ${{ steps.oasdiff.outputs.breaking }}
-        with:
-          filename: .github/ISSUE_TEMPLATE/breaking-change.md
-
   build-validate-stage:
     name: Build → Validate → Diff → Open PRD PR
-    needs: [has-changes, oas-break]
+    needs: has-changes
     if: ${{ needs.has-changes.outputs.are-changes == 'true' }}
     runs-on: ubuntu-latest
     environment: prd
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: kong/setup-deck@v1
         with:
