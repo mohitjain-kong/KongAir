@@ -6,4 +6,4 @@ patches:
     values:
       host: flights.kongair
       port: 8080
-      protocol: https
+      protocol: http
