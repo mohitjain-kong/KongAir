@@ -38,7 +38,7 @@ Additional layers:
 ```
 Developer edits openapi.yaml or patches.yaml
               ↓
-    Push to workflow/fca-demo
+    Push to workflow/dwp-demo
               ↓
      [has-changes] job
   dorny/paths-filter checks if
@@ -53,7 +53,7 @@ Developer edits openapi.yaml or patches.yaml
               ↓
   Commits PRD/kong/kong.yaml to workflow branch [skip ci]
               ↓
-  Opens/updates PR: workflow/fca-demo → main
+  Opens/updates PR: workflow/dwp-demo → main
   (gateway diff shown in PR body for reviewer)
 ```
 
@@ -114,8 +114,8 @@ deck gateway diff --select-tag platform-repo-managed \
 ```
 
 **Output:**
-- `PRD/kong/kong.yaml` committed back to `workflow/fca-demo` with `[skip ci]`
-- PR opened from `workflow/fca-demo` → `main` with the full gateway diff in the body
+- `PRD/kong/kong.yaml` committed back to `workflow/dwp-demo` with `[skip ci]`
+- PR opened from `workflow/dwp-demo` → `main` with the full gateway diff in the body
 - Workflow branch always holds the latest generated state file
 
 ---
@@ -127,7 +127,7 @@ deck gateway diff --select-tag platform-repo-managed \
 **Purpose:** Apply changes to Konnect and publish API specs to both the Dev Portal and the Konnect Catalog.
 
 ```
-PR merged to main (workflow/fca-demo → main)
+PR merged to main (workflow/dwp-demo → main)
               ↓
    [deploy-kong] job (environment: prd)
               ↓
@@ -156,7 +156,7 @@ deck gateway sync --select-tag platform-repo-managed \
 ```
 Developer edits openapi.yaml or patches.yaml
               ↓
-    Push to workflow/fca-demo
+    Push to workflow/dwp-demo
               ↓
   ┌─── Workflow 1: ci-kong.yaml ──────────────────────┐
   │  • openapi2kong conversion                        │
@@ -174,7 +174,7 @@ Developer edits openapi.yaml or patches.yaml
   └───────────────────────────────────────────────────┘
 ```
 
-> **Key design decision:** `workflow/fca-demo` is the working branch. All changes — source OAS, patches, and the generated `PRD/kong/kong.yaml` — live here. The PR from this branch to `main` is the production gate. `main` always reflects what is deployed.
+> **Key design decision:** `workflow/dwp-demo` is the working branch. All changes — source OAS, patches, and the generated `PRD/kong/kong.yaml` — live here. The PR from this branch to `main` is the production gate. `main` always reflects what is deployed.
 
 ---
 
@@ -273,7 +273,7 @@ PUT  /v3/apis/{id}/publications/{PORTAL_ID_V3}
 | Variable | Type | Example Value | Purpose |
 |----------|------|---------------|---------|
 | `KONNECT_ADDR` | var | `https://eu.api.konghq.com` | Konnect region endpoint |
-| `KONNECT_CP_NAME` | var | `FCA Control Plane` | Control plane name (quote if spaces) |
+| `KONNECT_CP_NAME` | var | `dwp Control Plane` | Control plane name (quote if spaces) |
 | `KONNECT_PORTAL_ID` | var | `c35e4220-...` | v2 classic Dev Portal ID |
 | `KONNECT_PORTAL_ID_V3` | var | `30ab00aa-...` | v3 Catalog portal ID |
 | `KONNECT_PAT` | **secret** | `kpat_...` | Personal Access Token |
@@ -303,7 +303,7 @@ Konnect may have resources created manually (via UI or Admin API). Using `--sele
 
 ### Why `[skip ci]` on the generated commit?
 
-The CI workflow commits `PRD/kong/kong.yaml` back to the `workflow/fca-demo` branch. Without `[skip ci]`, this push would trigger the CI again — causing an infinite loop. The `[skip ci]` tag in the commit message tells GitHub Actions to skip the workflow for that specific push.
+The CI workflow commits `PRD/kong/kong.yaml` back to the `workflow/dwp-demo` branch. Without `[skip ci]`, this push would trigger the CI again — causing an infinite loop. The `[skip ci]` tag in the commit message tells GitHub Actions to skip the workflow for that specific push.
 
 ---
 
@@ -313,7 +313,7 @@ The CI workflow commits `PRD/kong/kong.yaml` back to the `workflow/fca-demo` bra
 |-------|-----------|-------------|
 | `upload-artifact@v3` deprecated | Action version outdated | Updated to `v4` |
 | `env.KONNECT_CP_NAME` resolving empty | GitHub Env vars require `vars.` context, not `env.` | Changed all references to `vars.KONNECT_CP_NAME` |
-| "FCA Control Plane" breaking CLI args | Spaces in CP name not quoted | Quoted `"${{ vars.KONNECT_CP_NAME }}"` in all deck commands |
+| "dwp Control Plane" breaking CLI args | Spaces in CP name not quoted | Quoted `"${{ vars.KONNECT_CP_NAME }}"` in all deck commands |
 | Both old workflows firing simultaneously | Workflow 2 had no path filter — fired on every push to main | Resolved by consolidating to single CI workflow on `workflow/**` only |
 | `deck gateway validate` missing | Validate step not in pipeline | Added before `deck diff` in CI workflow |
 | ACME `storage: kong` invalid on Konnect | Konnect does not support local Kong storage | Changed to `storage: redis` with `storage_config.redis` config |

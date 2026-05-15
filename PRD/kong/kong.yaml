@@ -50,17 +50,17 @@ plugins:
   - platform-repo-managed
 services:
 - host: localhost
-  id: 9be51934-ab50-52dc-889b-d4f00dbcf084
-  name: flights-service-fca-demo
+  id: e7a0bc1e-7eca-5f25-9f41-f036d9f81cea
+  name: flights-service-dwp-demo
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: 9ef2db42-ae6e-50f6-8206-486ffdb70a78
+  - id: 4369a050-a18f-53bb-a7e0-a66b38084d84
     methods:
     - GET
-    name: flights-service-fca-demo_get-flights
+    name: flights-service-dwp-demo_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -72,10 +72,10 @@ services:
     - flight-data
     - flight-data1
     - platform-repo-managed
-  - id: 8fd6eb88-feef-5e1d-80e1-10e7bc90675b
+  - id: 742e7658-6bf0-5a80-ba5d-c89e1fd66cc6
     methods:
     - GET
-    name: flights-service-fca-demo_get-flight-by-number
+    name: flights-service-dwp-demo_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -87,10 +87,10 @@ services:
     - flight-data
     - flight-data1
     - platform-repo-managed
-  - id: f1dec77f-8524-55bf-9cc9-edb3b04a216a
+  - id: 96724852-621e-51d3-80b3-17192a01e8f7
     methods:
     - GET
-    name: flights-service-fca-demo_get-flight-details
+    name: flights-service-dwp-demo_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -102,10 +102,10 @@ services:
     - flight-data
     - flight-data1
     - platform-repo-managed
-  - id: d00594aa-86f8-5b44-9345-b27f26ccd577
+  - id: e9ba4dae-7d42-5f7a-86f3-9ef06124cd6f
     methods:
     - GET
-    name: flights-service-fca-demo_get-health
+    name: flights-service-dwp-demo_get-health
     paths:
     - ~/health$
     plugins: []
@@ -122,17 +122,17 @@ services:
   - flight-data1
   - platform-repo-managed
 - host: routes.kongair
-  id: d6800eaa-1128-55e4-8eb9-fca81d05cf09
-  name: routes-service-fca
+  id: 1b0fab60-9cc4-518a-b67d-10b620ed9a4c
+  name: routes-service-dwp
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 1dee157c-d5bc-505e-a900-f5827feb584b
+  - id: 94eb4e81-d4d1-506c-8fe6-c7496ae9eca4
     methods:
     - GET
-    name: routes-service-fca_get-health
+    name: routes-service-dwp_get-health
     paths:
     - ~/health$
     plugins: []
@@ -143,10 +143,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 2dc41df4-a7b9-5638-8138-181f0b82162c
+  - id: f93cd2d9-c5b1-5821-93de-99ac4b902476
     methods:
     - GET
-    name: routes-service-fca_get-routes
+    name: routes-service-dwp_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -157,10 +157,10 @@ services:
     tags:
     - route-data
     - platform-repo-managed
-  - id: 737b786b-7fa9-5383-835f-a1477d54b393
+  - id: 6b86f12f-928f-51b4-8dfb-9cb89195024f
     methods:
     - GET
-    name: routes-service-fca_get-route
+    name: routes-service-dwp_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -175,8 +175,8 @@ services:
   - route-data
   - platform-repo-managed
 - host: bookings.kongair
-  id: e51d368f-0d2e-5877-8854-ce49d173f9b8
-  name: bookings-service-fca
+  id: 5e14b4a0-ef0b-5db9-aa2c-149694e3ffcb
+  name: bookings-service-dwp
   path: /
   plugins:
   - _config: default-jwt
@@ -187,10 +187,10 @@ services:
   port: 8082
   protocol: http
   routes:
-  - id: b8f47ae3-172b-554f-8cd7-ca25fb96219b
+  - id: baa027f3-0b20-5b00-a4aa-805f99a3129b
     methods:
     - GET
-    name: bookings-service-fca_get-bookings
+    name: bookings-service-dwp_get-bookings
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -201,10 +201,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: 84fa5fd3-6bbc-5f8c-9478-037654682239
+  - id: 099fd8f6-1dc3-593c-b953-2aaf05452a4b
     methods:
     - POST
-    name: bookings-service-fca_post-booking
+    name: bookings-service-dwp_post-booking
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -215,10 +215,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: 8c793911-a9fc-5b3e-b3b0-3fcc98c8cd40
+  - id: 47c1a570-9dfc-53d4-be25-926e630f1a61
     methods:
     - GET
-    name: bookings-service-fca_get-health
+    name: bookings-service-dwp_get-health
     paths:
     - ~/health$
     plugins: []
@@ -233,17 +233,17 @@ services:
   - sales
   - platform-repo-managed
 - host: localhost
-  id: a6a4ea44-418e-55e2-a0e5-d988dd60238c
-  name: customer-information-service-fca
+  id: 07880212-9c34-57e0-8286-4111da8b148e
+  name: customer-information-service-dwp
   path: /
   plugins: []
   port: 8083
   protocol: http
   routes:
-  - id: f1104806-0208-5e1a-bb75-7bd3b67d8aa8
+  - id: d6ff6161-851e-55b9-9a81-472349dbc691
     methods:
     - GET
-    name: customer-information-service-fca_get-cust-info
+    name: customer-information-service-dwp_get-cust-info
     paths:
     - ~/customer$
     plugins: []
@@ -254,10 +254,10 @@ services:
     tags:
     - sales
     - platform-repo-managed
-  - id: 3f483af0-ee9e-5214-bd5d-a0e4ad67fb0e
+  - id: a0dbc006-7b66-5cee-a15c-acee7fd0d998
     methods:
     - GET
-    name: customer-information-service-fca_get-health
+    name: customer-information-service-dwp_get-health
     paths:
     - ~/health$
     plugins: []
