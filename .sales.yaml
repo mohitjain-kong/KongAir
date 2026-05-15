@@ -2,7 +2,7 @@ _format_version: "3.0"
 services:
 - host: bookings.kongair
   id: e51d368f-0d2e-5877-8854-ce49d173f9b8
-  name: bookings-service-fca
+  name: bookings-service-dwp
   path: /
   plugins:
   - _config: default-jwt
@@ -14,7 +14,7 @@ services:
   - id: b8f47ae3-172b-554f-8cd7-ca25fb96219b
     methods:
     - GET
-    name: bookings-service-fca_get-bookings
+    name: bookings-service-dwp_get-bookings
     paths:
     - ~/bookings$
     plugins: []
@@ -25,7 +25,7 @@ services:
   - id: 84fa5fd3-6bbc-5f8c-9478-037654682239
     methods:
     - POST
-    name: bookings-service-fca_post-booking
+    name: bookings-service-dwp_post-booking
     paths:
     - ~/bookings$
     plugins: []
@@ -36,7 +36,7 @@ services:
   - id: 8c793911-a9fc-5b3e-b3b0-3fcc98c8cd40
     methods:
     - GET
-    name: bookings-service-fca_get-health
+    name: bookings-service-dwp_get-health
     paths:
     - ~/health$
     plugins: []

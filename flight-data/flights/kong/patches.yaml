@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 patches:
   - selectors:
-    - $.services[?(@.name=="flights-service-fca")]
+    - $.services[?(@.name=="flights-service-dwp")]
     values:
       host: flights.kongair
       port: 8080
