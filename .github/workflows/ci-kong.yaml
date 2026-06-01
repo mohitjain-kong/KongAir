@@ -49,31 +49,39 @@ jobs:
 
       - name: Convert Flights API to Kong
         run: |
+          VERSION=$(yq '.info.version' flight-data/flights/openapi.yaml)
           deck file openapi2kong -s flight-data/flights/openapi.yaml | \
             deck file patch flight-data/flights/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-flights-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" flight-data flight-data2
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" \
+              flight-data "version:$VERSION"
 
       - name: Convert Routes API to Kong
         run: |
+          VERSION=$(yq '.info.version' flight-data/routes/openapi.yaml)
           deck file openapi2kong -s flight-data/routes/openapi.yaml | \
             deck file patch flight-data/routes/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/flight-data-routes-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" route-data
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" \
+              route-data "version:$VERSION"
 
       - name: Convert Bookings API to Kong
         run: |
+          VERSION=$(yq '.info.version' sales/bookings/openapi.yaml)
           deck file openapi2kong -s sales/bookings/openapi.yaml | \
             deck file patch sales/bookings/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/sales-bookings-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" \
+              sales "version:$VERSION"
 
       - name: Convert Customer API to Kong
         run: |
+          VERSION=$(yq '.info.version' sales/customer/openapi.yaml)
           deck file openapi2kong -s sales/customer/openapi.yaml | \
             deck file patch sales/customer/kong/patches.yaml | \
             deck file add-tags -o .github/artifacts/kong/sales-customer-kong.yaml \
-              --selector "$.services[*]" --selector "$.services[*].routes[*]" sales
+              --selector "$.services[*]" --selector "$.services[*].routes[*]" \
+              sales "version:$VERSION"
 
       - name: Merge all Kong configurations
         run: |
@@ -99,7 +107,7 @@ jobs:
           deck file patch platform/kong/patches.yaml | \
           deck file add-tags \
             -o PRD/kong/kong.yaml \
-            "platform-repo-managed"
+            "platform-repo-managed" "env:production"
 
       - name: Lint
         run: deck file lint -s PRD/kong/kong.yaml platform/kong/lint-rulesets.yaml
