@@ -7,30 +7,37 @@ consumer_groups:
 - name: gold
   tags:
   - platform-repo-managed
+  - env:production
 - name: lifetime
   tags:
   - platform-repo-managed
+  - env:production
 - name: platinum
   tags:
   - platform-repo-managed
+  - env:production
 - name: silver
   tags:
   - platform-repo-managed
+  - env:production
 consumers:
 - groups:
   - name: platinum
   tags:
   - platform-repo-managed
+  - env:production
   username: dfreese
 - groups:
   - name: gold
   tags:
   - platform-repo-managed
+  - env:production
   username: jdoe
 - groups:
   - name: silver
   tags:
   - platform-repo-managed
+  - env:production
   username: jsmith
 plugins:
 - config:
@@ -48,6 +55,7 @@ plugins:
   name: acme
   tags:
   - platform-repo-managed
+  - env:production
 services:
 - host: localhost
   id: 1912b837-fc5d-5c6e-8502-b2fc7b502068
@@ -70,8 +78,9 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - flight-data2
+    - version:1.0.0
     - platform-repo-managed
+    - env:production
   - id: 0f4841b6-8b21-5e9d-b434-d4f874929a1a
     methods:
     - GET
@@ -85,8 +94,9 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - flight-data2
+    - version:1.0.0
     - platform-repo-managed
+    - env:production
   - id: 5ab242ed-6260-59bc-a857-e8fa5fa3f44a
     methods:
     - GET
@@ -100,8 +110,9 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - flight-data2
+    - version:1.0.0
     - platform-repo-managed
+    - env:production
   - id: 02dea937-5516-504a-86f7-9045d7a13dc3
     methods:
     - GET
@@ -115,12 +126,14 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - flight-data2
+    - version:1.0.0
     - platform-repo-managed
+    - env:production
   tags:
   - flight-data
-  - flight-data2
+  - version:1.0.0
   - platform-repo-managed
+  - env:production
 - host: routes.kongair
   id: 1b0fab60-9cc4-518a-b67d-10b620ed9a4c
   name: routes-service-dwp
@@ -142,7 +155,9 @@ services:
     strip_path: false
     tags:
     - route-data
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   - id: f93cd2d9-c5b1-5821-93de-99ac4b902476
     methods:
     - GET
@@ -156,7 +171,9 @@ services:
     strip_path: false
     tags:
     - route-data
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   - id: 6b86f12f-928f-51b4-8dfb-9cb89195024f
     methods:
     - GET
@@ -170,10 +187,14 @@ services:
     strip_path: false
     tags:
     - route-data
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   tags:
   - route-data
+  - version:0.1.0
   - platform-repo-managed
+  - env:production
 - host: bookings.kongair
   id: 5e14b4a0-ef0b-5db9-aa2c-149694e3ffcb
   name: bookings-service-dwp
@@ -184,6 +205,7 @@ services:
     name: jwt
     tags:
     - platform-repo-managed
+    - env:production
   port: 8082
   protocol: http
   routes:
@@ -200,7 +222,9 @@ services:
     strip_path: false
     tags:
     - sales
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   - id: 099fd8f6-1dc3-593c-b953-2aaf05452a4b
     methods:
     - POST
@@ -214,7 +238,9 @@ services:
     strip_path: false
     tags:
     - sales
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   - id: 47c1a570-9dfc-53d4-be25-926e630f1a61
     methods:
     - GET
@@ -228,10 +254,14 @@ services:
     strip_path: false
     tags:
     - sales
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   tags:
   - sales
+  - version:0.1.0
   - platform-repo-managed
+  - env:production
 - host: localhost
   id: 07880212-9c34-57e0-8286-4111da8b148e
   name: customer-information-service-dwp
@@ -253,7 +283,9 @@ services:
     strip_path: false
     tags:
     - sales
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   - id: a0dbc006-7b66-5cee-a15c-acee7fd0d998
     methods:
     - GET
@@ -267,10 +299,14 @@ services:
     strip_path: false
     tags:
     - sales
+    - version:0.1.0
     - platform-repo-managed
+    - env:production
   tags:
   - sales
+  - version:0.1.0
   - platform-repo-managed
+  - env:production
 - host: experience.kongair
   id: f1c41796-5c88-419b-a391-baa0c2f62f0d
   name: experience-service
@@ -281,12 +317,14 @@ services:
     name: jwt
     tags:
     - platform-repo-managed
+    - env:production
   - config:
       cache_ttl: 15
       strategy: memory
     name: graphql-proxy-cache-advanced
     tags:
     - platform-repo-managed
+    - env:production
   - config:
       limit:
       - 500
@@ -296,6 +334,7 @@ services:
     name: graphql-rate-limiting-advanced
     tags:
     - platform-repo-managed
+    - env:production
   port: 8084
   protocol: http
   routes:
@@ -313,8 +352,10 @@ services:
     tags:
     - experience
     - platform-repo-managed
+    - env:production
   tags:
   - platform-repo-managed
+  - env:production
 - name: acme-dummy-service
   routes:
   - hosts:
@@ -326,7 +367,9 @@ services:
     - http
     tags:
     - platform-repo-managed
+    - env:production
   tags:
   - platform-repo-managed
+  - env:production
   url: http://127.0.0.1:65535
 upstreams: []
