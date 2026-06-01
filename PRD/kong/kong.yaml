@@ -49,18 +49,18 @@ plugins:
   tags:
   - platform-repo-managed
 services:
-- host: flights.kongair
-  id: c228718d-981f-5798-8ed0-c88578ff5fb3
-  name: flights-service-dwp
+- host: localhost
+  id: 1912b837-fc5d-5c6e-8502-b2fc7b502068
+  name: flights-service-fca-demo-2
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: f9237ecf-bbc7-565e-b485-00a4a3b0773f
+  - id: 37c70ca8-6411-54cd-9f00-a4ff5fd1bbe7
     methods:
     - GET
-    name: flights-service-dwp_get-flights
+    name: flights-service-fca-demo-2_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -72,10 +72,10 @@ services:
     - flight-data
     - flight-data2
     - platform-repo-managed
-  - id: 3f34d321-257f-55ba-8ff7-f54d9c9891de
+  - id: 0f4841b6-8b21-5e9d-b434-d4f874929a1a
     methods:
     - GET
-    name: flights-service-dwp_get-flight-by-number
+    name: flights-service-fca-demo-2_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -87,10 +87,10 @@ services:
     - flight-data
     - flight-data2
     - platform-repo-managed
-  - id: ed0f3be6-d9b9-5f32-af91-f470fd3bfbf6
+  - id: 5ab242ed-6260-59bc-a857-e8fa5fa3f44a
     methods:
     - GET
-    name: flights-service-dwp_get-flight-details
+    name: flights-service-fca-demo-2_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -102,10 +102,10 @@ services:
     - flight-data
     - flight-data2
     - platform-repo-managed
-  - id: 7d4aeb13-78d3-502b-813d-a0f484a5b4e4
+  - id: 02dea937-5516-504a-86f7-9045d7a13dc3
     methods:
     - GET
-    name: flights-service-dwp_get-health
+    name: flights-service-fca-demo-2_get-health
     paths:
     - ~/health$
     plugins: []
