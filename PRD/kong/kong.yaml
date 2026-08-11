@@ -58,17 +58,17 @@ plugins:
   - env:production
 services:
 - host: localhost
-  id: 1912b837-fc5d-5c6e-8502-b2fc7b502068
-  name: flights-service-fca-demo-2
+  id: ddc129f0-2cc1-5edb-825a-36806b468232
+  name: flights-service-test
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: 37c70ca8-6411-54cd-9f00-a4ff5fd1bbe7
+  - id: c005f37e-6a8f-57c1-888e-ec6c1a0516f1
     methods:
     - GET
-    name: flights-service-fca-demo-2_get-flights
+    name: flights-service-test_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -81,10 +81,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: 0f4841b6-8b21-5e9d-b434-d4f874929a1a
+  - id: e0237349-aaf0-5cd3-8a32-6bed35ad708a
     methods:
     - GET
-    name: flights-service-fca-demo-2_get-flight-by-number
+    name: flights-service-test_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -97,10 +97,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: 5ab242ed-6260-59bc-a857-e8fa5fa3f44a
+  - id: a1682b5c-1b01-511b-9da8-b8ab6e8af572
     methods:
     - GET
-    name: flights-service-fca-demo-2_get-flight-details
+    name: flights-service-test_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -113,10 +113,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: 02dea937-5516-504a-86f7-9045d7a13dc3
+  - id: 11f6953e-a805-53e4-8e2c-b9dc0ecb5bf3
     methods:
     - GET
-    name: flights-service-fca-demo-2_get-health
+    name: flights-service-test_get-health
     paths:
     - ~/health$
     plugins: []
