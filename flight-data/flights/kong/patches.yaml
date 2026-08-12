@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 patches:
   - selectors:
-    - $.services[?(@.name=="flights-service-finastra")]
+    - $.services[?(@.name=="flights-service-finastra-test")]
     values:
       host: flights.kongair.finastra
       port: 8080
