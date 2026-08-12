@@ -57,18 +57,18 @@ plugins:
   - platform-repo-managed
   - env:production
 services:
-- host: localhost
-  id: ddc129f0-2cc1-5edb-825a-36806b468232
-  name: flights-service-test
+- host: flights.kongair
+  id: 36854cec-8167-5278-af0e-f7cb0483a92d
+  name: flights-service-finastra
   path: /
   plugins: []
   port: 8080
   protocol: http
   routes:
-  - id: c005f37e-6a8f-57c1-888e-ec6c1a0516f1
+  - id: 4217944b-f524-5e6c-aabc-9b898848175d
     methods:
     - GET
-    name: flights-service-test_get-flights
+    name: flights-service-finastra_get-flights
     paths:
     - ~/flights$
     plugins: []
@@ -81,10 +81,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: e0237349-aaf0-5cd3-8a32-6bed35ad708a
+  - id: 25a02652-6471-55df-b30d-bafe650c8e3e
     methods:
     - GET
-    name: flights-service-test_get-flight-by-number
+    name: flights-service-finastra_get-flight-by-number
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)$
     plugins: []
@@ -97,10 +97,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: a1682b5c-1b01-511b-9da8-b8ab6e8af572
+  - id: 78097dd0-a488-5fec-a988-17b6a41f0d9e
     methods:
     - GET
-    name: flights-service-test_get-flight-details
+    name: flights-service-finastra_get-flight-details
     paths:
     - ~/flights/(?<flightnumber>[^#?/]+)/details$
     plugins: []
@@ -113,10 +113,10 @@ services:
     - version:1.0.0
     - platform-repo-managed
     - env:production
-  - id: 11f6953e-a805-53e4-8e2c-b9dc0ecb5bf3
+  - id: e672afdd-df89-5cb5-a572-7bcb1b3ee899
     methods:
     - GET
-    name: flights-service-test_get-health
+    name: flights-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []
