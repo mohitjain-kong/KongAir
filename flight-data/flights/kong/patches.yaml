@@ -4,6 +4,6 @@ patches:
   - selectors:
     - $.services[?(@.name=="flights-service-finastra")]
     values:
-      host: flights.kongair
+      host: flights.kongair.finastra
       port: 8080
       protocol: http
