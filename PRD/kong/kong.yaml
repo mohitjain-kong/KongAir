@@ -78,7 +78,7 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - version:1.0.0
+    - version:1.0.1
     - platform-repo-managed
     - env:production
   - id: 35d5c2bf-67cd-5e21-a41c-daa22ea19d95
@@ -94,7 +94,7 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - version:1.0.0
+    - version:1.0.1
     - platform-repo-managed
     - env:production
   - id: 449e7504-a25c-5b6f-8b80-8808f166dbb3
@@ -110,7 +110,7 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - version:1.0.0
+    - version:1.0.1
     - platform-repo-managed
     - env:production
   - id: 20bd4d87-c29c-5055-9ab3-8fa693459a18
@@ -126,12 +126,12 @@ services:
     strip_path: false
     tags:
     - flight-data
-    - version:1.0.0
+    - version:1.0.1
     - platform-repo-managed
     - env:production
   tags:
   - flight-data
-  - version:1.0.0
+  - version:1.0.1
   - platform-repo-managed
   - env:production
 - host: routes.kongair
