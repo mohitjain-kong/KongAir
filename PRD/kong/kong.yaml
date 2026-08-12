@@ -136,7 +136,7 @@ services:
   - env:production
 - host: routes.kongair
   id: 1b0fab60-9cc4-518a-b67d-10b620ed9a4c
-  name: routes-service-dwp
+  name: routes-service-finastra
   path: /
   plugins: []
   port: 8081
@@ -145,7 +145,7 @@ services:
   - id: 94eb4e81-d4d1-506c-8fe6-c7496ae9eca4
     methods:
     - GET
-    name: routes-service-dwp_get-health
+    name: routes-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []
@@ -161,7 +161,7 @@ services:
   - id: f93cd2d9-c5b1-5821-93de-99ac4b902476
     methods:
     - GET
-    name: routes-service-dwp_get-routes
+    name: routes-service-finastra_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -177,7 +177,7 @@ services:
   - id: 6b86f12f-928f-51b4-8dfb-9cb89195024f
     methods:
     - GET
-    name: routes-service-dwp_get-route
+    name: routes-service-finastra_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -197,7 +197,7 @@ services:
   - env:production
 - host: bookings.kongair
   id: 5e14b4a0-ef0b-5db9-aa2c-149694e3ffcb
-  name: bookings-service-dwp
+  name: bookings-service-finastra
   path: /
   plugins:
   - _config: default-jwt
@@ -212,7 +212,7 @@ services:
   - id: baa027f3-0b20-5b00-a4aa-805f99a3129b
     methods:
     - GET
-    name: bookings-service-dwp_get-bookings
+    name: bookings-service-finastra_get-bookings
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -228,7 +228,7 @@ services:
   - id: 099fd8f6-1dc3-593c-b953-2aaf05452a4b
     methods:
     - POST
-    name: bookings-service-dwp_post-booking
+    name: bookings-service-finastra_post-booking
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -244,7 +244,7 @@ services:
   - id: 47c1a570-9dfc-53d4-be25-926e630f1a61
     methods:
     - GET
-    name: bookings-service-dwp_get-health
+    name: bookings-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []
@@ -264,7 +264,7 @@ services:
   - env:production
 - host: localhost
   id: 07880212-9c34-57e0-8286-4111da8b148e
-  name: customer-information-service-dwp
+  name: customer-information-service-finastra
   path: /
   plugins: []
   port: 8083
@@ -273,7 +273,7 @@ services:
   - id: d6ff6161-851e-55b9-9a81-472349dbc691
     methods:
     - GET
-    name: customer-information-service-dwp_get-cust-info
+    name: customer-information-service-finastra_get-cust-info
     paths:
     - ~/customer$
     plugins: []
@@ -289,7 +289,7 @@ services:
   - id: a0dbc006-7b66-5cee-a15c-acee7fd0d998
     methods:
     - GET
-    name: customer-information-service-dwp_get-health
+    name: customer-information-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []

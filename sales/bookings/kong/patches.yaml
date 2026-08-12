@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 patches:
   - selectors:
-    - $.services[?(@.name=="bookings-service-dwp")]
+    - $.services[?(@.name=="bookings-service-finastra")]
     values:
       host: bookings.kongair
       port: 8082
