@@ -57,7 +57,7 @@ plugins:
   - platform-repo-managed
   - env:production
 services:
-- host: localhost
+- host: flights.kongair.finastra
   id: 4d5cdd57-5fa7-5288-8cca-e420e1b141b7
   name: flights-service-finastra-test
   path: /
