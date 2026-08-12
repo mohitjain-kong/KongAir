@@ -135,17 +135,17 @@ services:
   - platform-repo-managed
   - env:production
 - host: routes.kongair
-  id: 1b0fab60-9cc4-518a-b67d-10b620ed9a4c
-  name: routes-service-dwp
+  id: 1e70a84d-2737-51b8-b362-fd99e7f08b27
+  name: routes-service-finastra
   path: /
   plugins: []
   port: 8081
   protocol: http
   routes:
-  - id: 94eb4e81-d4d1-506c-8fe6-c7496ae9eca4
+  - id: 61d2175c-9dd6-535c-8ebe-5edbccdd059a
     methods:
     - GET
-    name: routes-service-dwp_get-health
+    name: routes-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []
@@ -158,10 +158,10 @@ services:
     - version:0.1.0
     - platform-repo-managed
     - env:production
-  - id: f93cd2d9-c5b1-5821-93de-99ac4b902476
+  - id: ae5ab3d8-6105-5340-9bcb-7b899777cc06
     methods:
     - GET
-    name: routes-service-dwp_get-routes
+    name: routes-service-finastra_get-routes
     paths:
     - ~/routes$
     plugins: []
@@ -174,10 +174,10 @@ services:
     - version:0.1.0
     - platform-repo-managed
     - env:production
-  - id: 6b86f12f-928f-51b4-8dfb-9cb89195024f
+  - id: ec2eaf14-30af-5f36-aef6-1d077ea593fa
     methods:
     - GET
-    name: routes-service-dwp_get-route
+    name: routes-service-finastra_get-route
     paths:
     - ~/routes/(?<id>[^#?/]+)$
     plugins: []
@@ -196,8 +196,8 @@ services:
   - platform-repo-managed
   - env:production
 - host: bookings.kongair
-  id: 5e14b4a0-ef0b-5db9-aa2c-149694e3ffcb
-  name: bookings-service-dwp
+  id: 0df3c568-74ee-5132-b62f-dd4fa085a987
+  name: bookings-service-finastra
   path: /
   plugins:
   - _config: default-jwt
@@ -209,10 +209,10 @@ services:
   port: 8082
   protocol: http
   routes:
-  - id: baa027f3-0b20-5b00-a4aa-805f99a3129b
+  - id: 4959518f-2a06-59d0-b173-5185730587c1
     methods:
     - GET
-    name: bookings-service-dwp_get-bookings
+    name: bookings-service-finastra_get-bookings
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -225,10 +225,10 @@ services:
     - version:0.1.0
     - platform-repo-managed
     - env:production
-  - id: 099fd8f6-1dc3-593c-b953-2aaf05452a4b
+  - id: f099760a-1f42-5b1f-bf9a-76e315833694
     methods:
     - POST
-    name: bookings-service-dwp_post-booking
+    name: bookings-service-finastra_post-booking
     paths:
     - ~/bookingsmohit$
     plugins: []
@@ -241,10 +241,10 @@ services:
     - version:0.1.0
     - platform-repo-managed
     - env:production
-  - id: 47c1a570-9dfc-53d4-be25-926e630f1a61
+  - id: 3359d73b-49d3-577a-bdf1-683fce275db7
     methods:
     - GET
-    name: bookings-service-dwp_get-health
+    name: bookings-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []
@@ -263,17 +263,17 @@ services:
   - platform-repo-managed
   - env:production
 - host: localhost
-  id: 07880212-9c34-57e0-8286-4111da8b148e
-  name: customer-information-service-dwp
+  id: 7e2f03b0-08d8-57f6-9a34-35fbf2f99b43
+  name: customer-information-service-finastra
   path: /
   plugins: []
   port: 8083
   protocol: http
   routes:
-  - id: d6ff6161-851e-55b9-9a81-472349dbc691
+  - id: 5e3e9bb7-a824-5fcc-b24b-0e2f5d61aff3
     methods:
     - GET
-    name: customer-information-service-dwp_get-cust-info
+    name: customer-information-service-finastra_get-cust-info
     paths:
     - ~/customer$
     plugins: []
@@ -286,10 +286,10 @@ services:
     - version:0.1.0
     - platform-repo-managed
     - env:production
-  - id: a0dbc006-7b66-5cee-a15c-acee7fd0d998
+  - id: 5c71f47a-47f8-5aa4-8b14-bdafb9a0ac3e
     methods:
     - GET
-    name: customer-information-service-dwp_get-health
+    name: customer-information-service-finastra_get-health
     paths:
     - ~/health$
     plugins: []

@@ -156,5 +156,5 @@ jobs:
               -d '{"visibility": "public"}')
             echo "Publish for $API_NAME: $(echo "$PUBLISH_RESULT" | tail -1)"
 
-            echo "Published $API_NAME v$VERSION to Konnect Catalog and dwp Demo portal"
+            echo "Published $API_NAME v$VERSION to Konnect Catalog and finastra Demo portal"
           done

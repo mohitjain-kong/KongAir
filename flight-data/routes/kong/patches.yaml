@@ -2,7 +2,7 @@ _format_version: "3.0"
 
 patches:
   - selectors:
-    - $.services[?(@.name=="routes-service-dwp")]
+    - $.services[?(@.name=="routes-service-finastra")]
     values:
       host: routes.kongair
       port: 8081
